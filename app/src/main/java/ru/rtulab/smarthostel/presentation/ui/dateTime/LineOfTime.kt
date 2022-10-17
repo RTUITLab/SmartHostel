@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.progressSemantics
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +31,9 @@ fun LineOfTime(
     val density = LocalDensity.current
     val linearIndicatorHeight = 12.dp
     var linearWidth = 240.0f
-    Card() {
+    Card(
+        shape = RoundedCornerShape(8.dp)
+    ) {
         Canvas(
             modifier = Modifier
                 .height(linearIndicatorHeight)
