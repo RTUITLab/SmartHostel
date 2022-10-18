@@ -1,8 +1,6 @@
 package ru.rtulab.smarthostel.presentation.ui.common
 
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +15,7 @@ import androidx.compose.ui.unit.sp
 @Preview
 @Composable
 fun ButtonFill(
+    modifier: Modifier=Modifier,
     text:String ="Button",
     colorFill:Color = MaterialTheme.colors.primary,
     onClick:() -> Unit = {},
@@ -25,19 +24,24 @@ fun ButtonFill(
 
     Card(
         backgroundColor = colorFill,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick =  onClick ,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        elevation = 0.dp
     )
     {
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
 
-       Text(
-           modifier = Modifier
-               .padding(0.dp,12.dp),
-           text = text,
-           color = Color.Transparent,
-           fontSize = 14.sp,
-           lineHeight = 20.sp
-       )
+            Text(
+                modifier = Modifier
+                    .padding(0.dp, 12.dp),
+                text = text,
+                color = MaterialTheme.colors.onPrimary,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+        }
     }
 }

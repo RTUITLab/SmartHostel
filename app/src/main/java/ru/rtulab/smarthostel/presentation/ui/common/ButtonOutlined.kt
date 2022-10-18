@@ -2,9 +2,7 @@ package ru.rtulab.smarthostel.presentation.ui.common
 
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,6 +17,8 @@ import androidx.compose.ui.unit.sp
 @Preview
 @Composable
 fun ButtonOutlined(
+    modifier: Modifier=Modifier,
+
     text:String ="Button",
     colorBorder:Color = MaterialTheme.colors.onPrimary,
     onClick:() -> Unit = {},
@@ -26,19 +26,24 @@ fun ButtonOutlined(
     ){
     Card(
         backgroundColor = Color.Transparent,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick =  onClick ,
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp,colorBorder)
     )
     {
-        Text(
-            modifier = Modifier
-                .padding(0.dp,12.dp),
-            text = text,
-            color = colorBorder,
-            fontSize = 14.sp,
-            lineHeight = 20.sp
-        )
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+
+            Text(
+                modifier = Modifier
+                    .padding(0.dp, 12.dp),
+                text = text,
+                color = colorBorder,
+                fontSize = 14.sp,
+                lineHeight = 20.sp
+            )
+        }
     }
 }

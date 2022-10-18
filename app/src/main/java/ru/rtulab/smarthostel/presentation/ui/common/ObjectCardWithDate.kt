@@ -2,8 +2,10 @@ package ru.rtulab.smarthostel.presentation.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,14 +14,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.rtulab.smarthostel.ui.theme.White50
 
 @Preview
 @Composable
-fun ObjectCardWithDate() {
+fun ObjectCardWithDate(
+    statusColor:Color = MaterialTheme.colors.onSecondary
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Gray)
+            .background(Color.Gray),
+        shape = RoundedCornerShape(8.dp),
+        backgroundColor = MaterialTheme.colors.secondary
 
 
 
@@ -42,8 +49,9 @@ fun ObjectCardWithDate() {
                     Text(
                         text = "Name",
                         fontSize = 16.sp,
+                        color = MaterialTheme.colors.onSecondary
 
-                        )
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -54,22 +62,26 @@ fun ObjectCardWithDate() {
                     Text(
 
                         text = "Status",
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        color = statusColor
                     )
                 }
             }
-            Row(){
+            Row() {
                 Text(
                     text = "Type",
-                    fontSize = 11.sp
+                    fontSize = 11.sp,
+                    color = White50
                 )
             }
             Row(
                 modifier = Modifier.padding(top = 4.dp)
-            ){
+            ) {
                 Text(
                     text = "Owner",
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colors.onSecondary
+
                 )
             }
             Divider(
