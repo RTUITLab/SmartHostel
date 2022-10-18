@@ -28,9 +28,7 @@ fun BigTimeItem(
     twoDigits:String = "10"
 ){
     Column() {
-        Row() {
-            Image(imageVector = , contentDescription = "")
-        }
+
         Card(
             shape = RoundedCornerShape(8.dp),
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),

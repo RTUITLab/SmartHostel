@@ -14,4 +14,5 @@ val Secondary = Color(0xFF282828)
 val Green = Color(0xFF4EBD3C)
 val Red = Color(0xFFCC2828)
 val onBackground =  Color(0xBFF2F2F2)
+val White50 = Color(0x80F2F2F2)
 

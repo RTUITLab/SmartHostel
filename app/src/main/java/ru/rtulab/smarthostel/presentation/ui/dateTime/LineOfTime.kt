@@ -65,9 +65,9 @@ fun LineOfTime(
 
         }
     }
-}
 
-data class TimeAndStatus(
+}
+class TimeAndStatus(
     public val active:Boolean = false,
     public val startToEnd: Pair<Float,Float> = (0f to 1f)
 ){}
