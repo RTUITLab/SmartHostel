@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SmartHostel</string>
+    <string name="SmartHostel">Умное Общежитие</string>
+    <string name="Smart">Умное</string>
+    <string name="Hostel">Общежитие</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="Enter">Войти</string>
+    <string name="NothaveAccount">Нет Аккаунта?</string>
 </resources>
