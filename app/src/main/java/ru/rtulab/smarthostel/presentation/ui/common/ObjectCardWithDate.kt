@@ -19,6 +19,12 @@ import ru.rtulab.smarthostel.ui.theme.White50
 @Preview
 @Composable
 fun ObjectCardWithDate(
+    name:String="Name",
+    status:String ="Status",
+    type:String = "Type",
+    owner:String = "Owner",
+    startTime:String = "Date Time",
+    endTime:String = "Date Time",
     statusColor:Color = MaterialTheme.colors.onSecondary
 ) {
     Card(
@@ -47,7 +53,7 @@ fun ObjectCardWithDate(
                         .weight(0.5f, false)
                 ) {
                     Text(
-                        text = "Name",
+                        text = name,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onSecondary
 
@@ -61,7 +67,7 @@ fun ObjectCardWithDate(
                 ) {
                     Text(
 
-                        text = "Status",
+                        text = status,
                         fontSize = 14.sp,
                         color = statusColor
                     )
@@ -69,7 +75,7 @@ fun ObjectCardWithDate(
             }
             Row() {
                 Text(
-                    text = "Type",
+                    text = type,
                     fontSize = 11.sp,
                     color = White50
                 )
@@ -78,7 +84,7 @@ fun ObjectCardWithDate(
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 Text(
-                    text = "Owner",
+                    text = owner,
                     fontSize = 14.sp,
                     color = MaterialTheme.colors.onSecondary
 
@@ -105,7 +111,7 @@ fun ObjectCardWithDate(
                     }
                     Row() {
                         Text(
-                            text = "Date Time",
+                            text = startTime,
                             fontSize = 14.sp
                         )
                     }
@@ -123,7 +129,7 @@ fun ObjectCardWithDate(
                     }
                     Row() {
                         Text(
-                            text = "Date Time",
+                            text = endTime,
                             fontSize = 14.sp
                         )
                     }
