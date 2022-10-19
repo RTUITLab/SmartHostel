@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.ui.authtorization.components.Title
 import ru.rtulab.smarthostel.presentation.ui.common.ButtonFill
+import ru.rtulab.smarthostel.ui.theme.White
 import ru.rtulab.smarthostel.ui.theme.White50
 
 @Preview
@@ -57,9 +58,9 @@ fun Authtorization(){
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 placeholderColor = White50,
                 backgroundColor = Color.Transparent,
-                textColor = White50,
-                cursorColor = White50,
-                focusedBorderColor = White50,
+                textColor = White,
+                cursorColor = White,
+                focusedBorderColor = White,
                 unfocusedBorderColor = White50
             ),
             singleLine = true,
