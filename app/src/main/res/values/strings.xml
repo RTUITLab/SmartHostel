@@ -7,4 +7,8 @@
     <string name="password">Пароль</string>
     <string name="Enter">Войти</string>
     <string name="NothaveAccount">Нет Аккаунта?</string>
+    <string name="LastBooking">Последнее бронирование</string>
+    <string name="image">Изображение</string>
+    <string name="download">Скачать</string>
+    <string name="texttodownload">Скачайте схему общежития - так будет проще все найти</string>
 </resources>

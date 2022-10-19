@@ -9,6 +9,8 @@ val Teal200 = Color(0xFF03DAC5)
 
 val Background = Color(0xFF1E1E1E)
 val Accent = Color(0xFF625EFF)
+val Accent50 = Color(0xBF625EFF)
+
 val White = Color(0xFFF2F2F2)
 val Secondary = Color(0xFF282828)
 val Green = Color(0xFF4EBD3C)
