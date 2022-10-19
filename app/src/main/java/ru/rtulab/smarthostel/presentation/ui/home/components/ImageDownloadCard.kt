@@ -88,7 +88,8 @@ fun ImageDownloadCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .weight(0.5f, false)
+                            .weight(0.5f, false),
+                        horizontalAlignment = Alignment.End
                     ) {
                         Image(
                             painter = painterResource(R.drawable.download),

@@ -11,4 +11,7 @@
     <string name="image">Изображение</string>
     <string name="download">Скачать</string>
     <string name="texttodownload">Скачайте схему общежития - так будет проще все найти</string>
+    <string name="SoonEnd">Скоро закончится</string>
+    <string name="RecentlyFree">Недавно освободились</string>
+    <string name="filter">фильтр</string>
 </resources>
