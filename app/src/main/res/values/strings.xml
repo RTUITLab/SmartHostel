@@ -24,4 +24,18 @@
     <string name="Role">Роль</string>
     <string name="Bookings">Бронирования</string>
     <string name="close">Закрыть</string>
+    <string name="home">Домашнаяя страница</string>
+    <string name="objects">Оборудования</string>
+    <string name="booking">Бронирования</string>
+    <string name="profile">Профиль</string>
+    <string name="object_details">Оборудование</string>
+
+    <string name="booking_new">Создать бронирование</string>
+    <string name="booking_details">Бронирование</string>
+
+
+
+
+
+
 </resources>
