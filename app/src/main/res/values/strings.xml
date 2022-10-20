@@ -22,4 +22,5 @@
     <string name="help">Помощь</string>
     <string name="Room">Комната</string>
     <string name="Role">Роль</string>
+    <string name="Bookings">Бронирования</string>
 </resources>

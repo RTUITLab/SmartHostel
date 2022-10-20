@@ -27,13 +27,18 @@ fun Home(){
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-        H1(stringResource(R.string.LastBooking))
+        H1(
+            Modifier.padding(vertical = 16.dp),
+            stringResource(R.string.LastBooking)
+        )
         //LastBooking
         ObjectCardWithDate()
 
         ImageDownloadCard()
 
-        H1(stringResource(R.string.SoonEnd))
+        H1(
+            Modifier.padding(vertical = 16.dp),
+            stringResource(R.string.SoonEnd))
 
         val arraySoonEnd = listOf<Nothing>()
         LazyColumn(){
@@ -43,7 +48,10 @@ fun Home(){
             }
         }
 
-        H1(stringResource(R.string.RecentlyFree))
+        H1(
+            Modifier.padding(vertical = 16.dp),
+            stringResource(R.string.RecentlyFree)
+        )
 
         val arrayRecently = listOf<Nothing>()
         LazyColumn(

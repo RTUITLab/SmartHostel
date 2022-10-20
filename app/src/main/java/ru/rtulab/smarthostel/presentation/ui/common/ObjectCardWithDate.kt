@@ -30,6 +30,7 @@ fun ObjectCardWithDate(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = 8.dp)
             .background(Color.Gray),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.secondary

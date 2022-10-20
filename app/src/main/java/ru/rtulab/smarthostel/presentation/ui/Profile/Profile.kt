@@ -2,6 +2,8 @@ package ru.rtulab.smarthostel.presentation.ui.Profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.ui.common.H1
+import ru.rtulab.smarthostel.presentation.ui.common.ObjectCardWithDate
 import ru.rtulab.smarthostel.ui.theme.White
 import ru.rtulab.smarthostel.ui.theme.White50
 
@@ -35,6 +38,8 @@ fun Profile(){
     val firstname = "FirstName"
 
     val imageLink =""
+
+    val array = listOf<Nothing>()
     Column(
     horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -153,6 +158,25 @@ fun Profile(){
                     lineHeight = 24.sp,
                     color = White
                 )
+            }
+        }
+        Row(
+            Modifier.padding(top = 24.dp),
+        ) {
+            Column() {
+                Text(
+                    text = stringResource(R.string.Bookings),
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    color = White
+
+                )
+            }
+
+        }
+        LazyColumn(){
+            items(array){
+                ObjectCardWithDate()
             }
         }
     }
