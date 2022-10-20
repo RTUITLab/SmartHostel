@@ -31,7 +31,7 @@ fun AppBarTabRow(
             Tab(
                 text = {
                     Text(
-                        text = it.uppercase(Locale.getDefault()),
+                        text = it,
                         fontSize = 14.sp,
                         lineHeight = 20.sp
                     )

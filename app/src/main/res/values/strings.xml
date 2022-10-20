@@ -14,4 +14,12 @@
     <string name="SoonEnd">Скоро закончится</string>
     <string name="RecentlyFree">Недавно освободились</string>
     <string name="filter">фильтр</string>
+    <string name="Active">Активные</string>
+    <string name="Ended">Завершенные</string>
+    <string name="Add">Добавить</string>
+    <string name="avatar">Аватар</string>
+    <string name="BaseInfo">Основная информация</string>
+    <string name="help">Помощь</string>
+    <string name="Room">Комната</string>
+    <string name="Role">Роль</string>
 </resources>
