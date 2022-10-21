@@ -3,6 +3,7 @@ package ru.rtulab.smarthostel.presentation.navigation
 import android.content.res.Resources
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +21,7 @@ fun NavigationGraph(
     navController: NavHostController
 ){
 
+val allScreens = AppScreen.getAll(LocalContext.current)
 
     NavHost(navController, startDestination = NavItem.Home.screen_route){
         composable(NavItem.Home.screen_route){

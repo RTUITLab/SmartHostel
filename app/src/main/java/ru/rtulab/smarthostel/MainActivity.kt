@@ -8,8 +8,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import ru.rtulab.smarthostel.presentation.SmartHostel
+import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
+import ru.rtulab.smarthostel.presentation.ui.authtorization.Authtorization
+import ru.rtulab.smarthostel.presentation.viewmodel.LocalActivity
 import ru.rtulab.smarthostel.ui.theme.SmartHostelTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +28,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+                    if(/*auth*/true){
+                        CompositionLocalProvider(
+                            LocalNavController provides rememberNavController(),
+                            LocalActivity provides this
+                        ) {
+                            SmartHostel()
+                        }
+                    }else{
+                        Authtorization()
+                    }
 
 
                 }

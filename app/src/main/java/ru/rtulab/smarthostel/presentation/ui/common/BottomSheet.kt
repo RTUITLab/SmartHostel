@@ -56,7 +56,11 @@ fun BottomSheet(
 
                  horizontalAlignment =Alignment.End
          ) {
-             Icon(imageVector = Icons.Default.Close, contentDescription = stringResource(R.string.close))
+             Icon(
+                 imageVector = Icons.Default.Close,
+                 contentDescription = stringResource(R.string.close),
+                 tint = White
+             )
          }
      }
      Text(

@@ -47,11 +47,6 @@ sealed class AppTab(
                 Booking,
                 Profile,
             )
-
-
-
-
-
     }
 }
 
