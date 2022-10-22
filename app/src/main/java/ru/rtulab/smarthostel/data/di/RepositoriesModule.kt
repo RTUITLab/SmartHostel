@@ -1,4 +1,4 @@
-package ru.rtuitlab.itlab.data.di
+package ru.rtulab.smarthostel.data.di
 
 import dagger.Module
 import dagger.Provides

@@ -1,4 +1,4 @@
-package ru.rtuitlab.itlab.common
+package ru.rtulab.smarthostel.common
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

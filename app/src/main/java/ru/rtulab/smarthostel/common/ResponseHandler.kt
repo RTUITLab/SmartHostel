@@ -1,9 +1,10 @@
-package ru.rtuitlab.itlab.common
+package ru.rtulab.smarthostel.common
 
 import android.util.Log
-import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import retrofit2.HttpException
+
 
 class ResponseHandler {
     suspend operator fun <T> invoke(block: suspend () -> T) = try {

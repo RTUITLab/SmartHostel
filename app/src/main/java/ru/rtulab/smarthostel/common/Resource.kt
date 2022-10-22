@@ -1,4 +1,4 @@
-package ru.rtuitlab.itlab.common
+package ru.rtulab.smarthostel.common
 
 sealed class Resource<out T> {
     class Success<T>(val data: T) : Resource<T>()

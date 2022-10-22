@@ -1,4 +1,4 @@
-package ru.rtuitlab.itlab.data.di
+package ru.rtulab.smarthostel.data.di
 
 import android.content.Context
 import dagger.Module
@@ -8,8 +8,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import net.openid.appauth.AppAuthConfiguration
 import net.openid.appauth.AuthorizationService
-import ru.rtuitlab.itlab.common.persistence.AuthStateStorage
+import ru.rtulab.smarthostel.common.persistence.AuthStateStorage
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
