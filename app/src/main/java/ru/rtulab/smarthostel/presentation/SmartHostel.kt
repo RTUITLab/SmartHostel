@@ -1,6 +1,8 @@
 package ru.rtulab.smarthostel.presentation
 
 import android.graphics.BlurMaskFilter
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -9,18 +11,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.rtulab.smarthostel.presentation.navigation.AppScreen
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
+import ru.rtulab.smarthostel.presentation.navigation.NavigationGraph
 import ru.rtulab.smarthostel.presentation.ui.common.BasicTopAppBar
 import ru.rtulab.smarthostel.presentation.ui.common.bottomsheet.BottomSheetViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.burgermenu.BurgerMenuViewModel
+import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.LocalSharedElementsRootScope
+import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.SharedElementsRoot
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppTabsViewModel
+import ru.rtulab.smarthostel.presentation.ui.home.Home
 import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
 import ru.rtulab.smarthostel.ui.theme.Accent
+import ru.rtulab.smarthostel.ui.theme.White
+import ru.rtulab.smarthostel.ui.theme.White50
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -35,6 +47,13 @@ fun SmartHostel(
 
     val navController = LocalNavController.current
 
+    var sharedElementScope = LocalSharedElementsRootScope.current
+
+    val onBackAction: () -> Unit = {
+        if (sharedElementScope?.isRunningTransition == false)
+            if (!navController.popBackStack()) appBarViewModel.handleDeepLinkPop()
+    }
+
     LaunchedEffect(bottomSheetViewModel.bottomSheetState.currentValue) {
         if (bottomSheetViewModel.bottomSheetState.currentValue == ModalBottomSheetValue.Hidden)
             bottomSheetViewModel.hide(this)
@@ -43,6 +62,8 @@ fun SmartHostel(
         if (!burgerMenuViewModel.bottomSheetState)
             burgerMenuViewModel.bottomSheetState =!burgerMenuViewModel.bottomSheetState
     }
+
+    val tabs = appTabsViewModel.appTabs.collectAsState().value
 
     ModalBottomSheetLayout(
         sheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),//заменить
@@ -73,10 +94,66 @@ fun SmartHostel(
 
             },
             content = {
-
+                Box(
+                    modifier = Modifier.padding(
+                        bottom = it.calculateBottomPadding(),
+                        top = it.calculateTopPadding()
+                    )
+                ) {
+                    SharedElementsRoot {
+                        sharedElementScope = LocalSharedElementsRootScope.current
+                        NavigationGraph(navController)
+                    }
+                }
             },
             bottomBar = {
 
+                val currentTab by appBarViewModel.currentTab.collectAsState()
+
+                BottomNavigation(
+                    backgroundColor = Accent,
+                    contentColor = White
+                ) {
+                    tabs.forEach { tab ->
+
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentDestination = navBackStackEntry?.destination
+
+                        BottomNavigationItem(
+                            icon = {Icon( tab.icon, contentDescription = tab.route) },
+                            label = { Text(text = stringResource(tab.resourceId)) },
+                            selectedContentColor = White,
+                            unselectedContentColor = White50,
+                            alwaysShowLabel = false,
+                            selected = currentDestination?.hierarchy?.any { it.route == tab.route } == true,
+                            onClick = {
+// As per https://stackoverflow.com/questions/71789903/does-navoptionsbuilder-launchsingletop-work-with-nested-navigation-graphs-in-jet,
+
+                                // it seems to not be possible to have all three of multiple back stacks, resetting tabs and single top behavior at once by the means
+                                // of Jetpack Navigation APIs, but only two of the above.
+                                // This code provides resetting and singleTop behavior for the default tab.
+                                if (tab == currentTab) {
+                                    navController.popBackStack(
+                                        route = tab.startDestination,
+                                        inclusive = false
+                                    )
+                                    return@BottomNavigationItem
+                                }
+                                // This code always leaves default tab's start destination on the bottom of the stack. Workaround needed?
+                                navController.navigate(tab.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+
+                                    // We want to reset the graph if it is clicked while already selected
+                                    restoreState = tab != currentTab
+                                }
+                                appBarViewModel.setCurrentTab(tab)
+                            }
+                        )
+                    }
+                }
             }
         )
     }

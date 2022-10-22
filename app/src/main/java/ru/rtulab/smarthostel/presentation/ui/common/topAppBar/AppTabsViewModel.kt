@@ -17,7 +17,7 @@ class AppTabsViewModel constructor(
     private val _statePage = MutableStateFlow(1)
     val statePage = _statePage.asStateFlow()
 
-    val _appTabs = MutableStateFlow(AppTab.all)
+    private val _appTabs = MutableStateFlow(AppTab.all)
     val appTabs = _appTabs.asStateFlow()
 
 
