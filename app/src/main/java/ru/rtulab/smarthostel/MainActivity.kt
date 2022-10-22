@@ -12,12 +12,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.rtulab.smarthostel.presentation.SmartHostel
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.ui.authtorization.Authtorization
 import ru.rtulab.smarthostel.presentation.viewmodel.LocalActivity
 import ru.rtulab.smarthostel.ui.theme.SmartHostelTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

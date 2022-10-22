@@ -1,4 +1,4 @@
-package ru.rtuitlab.itlab.data.remote.api
+package ru.rtulab.smarthostel.data
 
 import android.util.Log
 import kotlinx.coroutines.runBlocking
@@ -6,15 +6,15 @@ import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationService
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.rtuitlab.itlab.common.persistence.AuthStateStorage
+import ru.rtulab.smarthostel.common.persistence.AuthStateStorage
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+
 class TokenInterceptor @Inject constructor(
-        private val authStateStorage: AuthStateStorage,
-        private val authService: AuthorizationService
+    private val authStateStorage: AuthStateStorage,
+    private val authService: AuthorizationService
 ): Interceptor {
     private companion object {
         const val TAG = "TokenInterceptor"

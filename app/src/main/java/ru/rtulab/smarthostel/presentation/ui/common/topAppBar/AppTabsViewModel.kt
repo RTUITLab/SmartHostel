@@ -2,14 +2,16 @@ package ru.rtulab.smarthostel.presentation.ui.common.topAppBar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.rtulab.smarthostel.presentation.navigation.AppTab
+import javax.inject.Inject
 
 
-
-class AppTabsViewModel constructor(
+@HiltViewModel
+class AppTabsViewModel @Inject constructor(
     //authStateStorage: AuthStateStorage
 ) : ViewModel() {
     // private val userClaimsFlow = authStateStorage.userClaimsFlow
