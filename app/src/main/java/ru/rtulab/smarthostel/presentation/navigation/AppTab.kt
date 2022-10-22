@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.core.os.bundleOf
 import kotlinx.parcelize.Parcelize
@@ -21,13 +23,13 @@ sealed class AppTab(
     val route: String,
     val startDestination: String,
     @StringRes val resourceId: Int,
-    val icon: ImageVector,
+    val icon: Int,
     var accessible: Boolean = true
 ) {
-    object Home: AppTab("events_tab", AppScreen.Home.route, R.string.home, Icons.Default.Home)
-    object Objects: AppTab("projects_tab", AppScreen.Objects.route, R.string.objects, Icons.Default.Face)
-    object Booking: AppTab("devices_tab", AppScreen.Booking.route, R.string.booking, Icons.Default.ThumbUp,)
-    object Profile: AppTab("profile_tab", AppScreen.Profile.route, R.string.profile, Icons.Default.AccountCircle)
+    object Home: AppTab("home_tab", AppScreen.Home.route, R.string.home, R.drawable.home)
+    object Objects: AppTab("objects_tab", AppScreen.Objects.route, R.string.objects, R.drawable.objects)
+    object Booking: AppTab("booking_tab", AppScreen.Booking.route, R.string.booking, R.drawable.booking)
+    object Profile: AppTab("profile_tab", AppScreen.Profile.route, R.string.profile, R.drawable.profile)
 
     fun saveState() = bundleOf(SCREEN_KEY to route)
 
@@ -56,7 +58,6 @@ open class AppScreen(
     val route: String,
     val navLink: String = route.substringBefore("/{")
 ) : Parcelable {
-    // Employee-related
     object Home: AppScreen(R.string.home, "home")
     object Objects: AppScreen(R.string.objects, "objects")
     object Booking: AppScreen(R.string.booking, "booking")
@@ -84,8 +85,8 @@ open class AppScreen(
             Objects,
             Booking,
             Profile,
-            ObjectDetails,
-            BookingDetails,
+            ObjectDetails(context.resources.getString(R.string.object_details)),
+            BookingDetails(context.resources.getString(R.string.booking_details)),
             BookingNew
         )
     }

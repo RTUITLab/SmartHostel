@@ -1,8 +1,8 @@
-package ru.rtuitlab.itlab.presentation.utils
+/*
+package ru.rtulab.smarthostel.presentation.utils
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import ru.rtuitlab.itlab.data.remote.api.users.models.UserClaimCategories
 
 object UserClaimParser {
 	fun parse(payload: String?): List<Any> {
@@ -28,4 +28,4 @@ object UserClaimParser {
 			UserClaimCategories.obtainClaimFrom(it)
 		}
 	}
-}
+}*/

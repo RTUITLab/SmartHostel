@@ -1,17 +1,19 @@
-package ru.rtuitlab.itlab.common.persistence
+package ru.rtulab.smarthostel.common.persistence
 
 import android.content.Context
 import android.util.Base64
+import androidx.datastore.createDataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.createDataStore
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.openid.appauth.*
-import ru.rtuitlab.itlab.presentation.utils.UserClaimParser
 
 class AuthStateStorage(context: Context) {
     private companion object {
@@ -41,9 +43,9 @@ class AuthStateStorage(context: Context) {
         }
     }
 
-    private fun Preferences.getUserClaims(): List<Any> = UserClaimParser.parse(this[USER_PAYLOAD_KEY])
+   // private fun Preferences.getUserClaims(): List<Any> = UserClaimParser.parse(this[USER_PAYLOAD_KEY])
 
-    val userClaimsFlow = dataStore.data.map { it.getUserClaims() }
+    //val userClaimsFlow = dataStore.data.map { it.getUserClaims() }
 
     suspend fun resetAuthStateWithConfig(config: AuthorizationServiceConfiguration?) {
         val clearedAuthState = config?.let { AuthState(it) } ?: AuthState()

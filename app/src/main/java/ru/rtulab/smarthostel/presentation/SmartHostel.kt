@@ -1,6 +1,5 @@
 package ru.rtulab.smarthostel.presentation
 
-import android.graphics.BlurMaskFilter
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,21 +13,19 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.rtulab.smarthostel.presentation.navigation.AppScreen
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.navigation.NavigationGraph
-import ru.rtulab.smarthostel.presentation.ui.common.BasicTopAppBar
+import ru.rtulab.smarthostel.presentation.ui.common.BottomSheet
+import ru.rtulab.smarthostel.presentation.ui.common.header.BasicTopAppBar
 import ru.rtulab.smarthostel.presentation.ui.common.bottomsheet.BottomSheetViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.burgermenu.BurgerMenuViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.LocalSharedElementsRootScope
 import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.SharedElementsRoot
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppTabsViewModel
-import ru.rtulab.smarthostel.presentation.ui.home.Home
 import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
 import ru.rtulab.smarthostel.ui.theme.Accent
 import ru.rtulab.smarthostel.ui.theme.White
@@ -66,9 +63,9 @@ fun SmartHostel(
     val tabs = appTabsViewModel.appTabs.collectAsState().value
 
     ModalBottomSheetLayout(
-        sheetState = ModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),//заменить
+        sheetState = bottomSheetViewModel.bottomSheetState,//заменить
         sheetContent = {
-
+            BottomSheet()
         },
         sheetShape = RoundedCornerShape(
             topStart = 16.dp,
@@ -78,8 +75,7 @@ fun SmartHostel(
 
     ) {
         Scaffold(
-            modifier = Modifier
-                .blur(50.dp),
+            modifier = if(bottomSheetViewModel.visibilityAsState.collectAsState().value) Modifier.blur(50.dp) else Modifier.blur(0.dp),
             drawerContent = {
 
             },
@@ -88,7 +84,7 @@ fun SmartHostel(
 
                     else -> BasicTopAppBar(
                         text = stringResource(currentScreen.screenNameResource),
-                        //  onBackAction = onBackAction
+                        //onBackAction = onBackAction
                     )
                 }
 
@@ -120,14 +116,13 @@ fun SmartHostel(
                         val currentDestination = navBackStackEntry?.destination
 
                         BottomNavigationItem(
-                            icon = {Icon( tab.icon, contentDescription = tab.route) },
-                            label = { Text(text = stringResource(tab.resourceId)) },
+                            icon = {Icon( painter = painterResource(tab.icon), contentDescription = tab.route) },
                             selectedContentColor = White,
                             unselectedContentColor = White50,
                             alwaysShowLabel = false,
                             selected = currentDestination?.hierarchy?.any { it.route == tab.route } == true,
                             onClick = {
-// As per https://stackoverflow.com/questions/71789903/does-navoptionsbuilder-launchsingletop-work-with-nested-navigation-graphs-in-jet,
+                                // As per https://stackoverflow.com/questions/71789903/does-navoptionsbuilder-launchsingletop-work-with-nested-navigation-graphs-in-jet,
 
                                 // it seems to not be possible to have all three of multiple back stacks, resetting tabs and single top behavior at once by the means
                                 // of Jetpack Navigation APIs, but only two of the above.

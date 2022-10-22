@@ -3,39 +3,72 @@ package ru.rtulab.smarthostel.presentation.navigation
 import android.content.res.Resources
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.ui.Profile.Profile
 import ru.rtulab.smarthostel.presentation.ui.booking.Booking
+import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.LocalSharedElementsRootScope
+import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.home.Home
 import ru.rtulab.smarthostel.presentation.ui.objects.Objects
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController
-){
+    navController: NavHostController,
+    appBarViewModel: AppBarViewModel = viewModel(),
+    ){
 
 val allScreens = AppScreen.getAll(LocalContext.current)
 
-    NavHost(navController, startDestination = NavItem.Home.screen_route){
-        composable(NavItem.Home.screen_route){
-            Home()
-        }
-        composable(NavItem.Home.screen_route){
-            Home()
-        }
-        composable(NavItem.Home.screen_route){
-            Home()
-        }
-        composable(NavItem.Home.screen_route){
-            Home()
-        }
+    val resources = LocalContext.current.resources
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    LaunchedEffect(navBackStackEntry) {
+        // If a deep link is opened from a killed state, nav host's back stack does not yet exist,
+        // thus resulting in a NullPointerException.
+        // Deep link will be handled on the next composition tree pass
+        try {
+            appBarViewModel.onNavigate(
+                allScreens.find { it.route == navBackStackEntry?.destination?.route }!!,
+                navController
+            )
+
+            // This condition is possible to be true if a system "Back" press was detected in a non-default tab,
+            // navigating the user to app's start destination.
+            // To correctly reflect that in bottom navigation, this code is needed
+            if (navBackStackEntry?.destination?.route == appBarViewModel.defaultTab.startDestination)
+                appBarViewModel.setCurrentTab(appBarViewModel.defaultTab)
+        } catch (e: NullPointerException) {}
+    }
+    // Disabling system "Back" button during transition
+    BackHandler(LocalSharedElementsRootScope.current!!.isRunningTransition) {}
+
+
+    NavHost(
+        navController = navController,
+        startDestination = appBarViewModel.defaultTab.route){
+        homeGraph(
+            resources = resources
+        )
+        objectsGraph(
+            resources = resources
+        )
+        bookingGraph(
+            resources = resources
+        )
+        profileGraph(
+            resources = resources
+        )
     }
 }
 
@@ -52,7 +85,7 @@ private fun NavGraphBuilder.homeGraph(
        }
 
 }
-private fun NavGraphBuilder.ObjectsGraph(
+private fun NavGraphBuilder.objectsGraph(
     resources:Resources
 ){
     navigation(
@@ -62,21 +95,21 @@ private fun NavGraphBuilder.ObjectsGraph(
         composable(AppScreen.Objects.route){
             Objects()
         }
-        composable(
+        /*composable(
             route = AppScreen.Objects.route,
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern =
-                        "https://"+/*${resources.getString(R.string.HOST_URI)}*/"/objects/{objectId}"
+                        "https://"+*//*${resources.getString(R.string.HOST_URI)}*//*"/objects/{objectId}"
                 }
             )
         ) {
          //   ObjectDetails()
-        }
+        }*/
     }
 
 }
-private fun NavGraphBuilder.BookingGraph(
+private fun NavGraphBuilder.bookingGraph(
     resources:Resources
 ){
     navigation(
@@ -86,21 +119,21 @@ private fun NavGraphBuilder.BookingGraph(
         composable(AppScreen.Booking.route){
             Booking()
         }
-        composable(
+       /* composable(
             route = AppScreen.Booking.route,
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern =
-                        "https://"+/*${resources.getString(R.string.HOST_URI)}*/"/booking/{bookingId}"
+                        "https://"+*//*${resources.getString(R.string.HOST_URI)}*//*"/booking/{bookingId}"
                 }
             )
         ) {
             //   BookingDetails()
-        }
+        }*/
     }
 
 }
-private fun NavGraphBuilder.ProfileGraph(
+private fun NavGraphBuilder.profileGraph(
     resources:Resources
 ){
     navigation(
