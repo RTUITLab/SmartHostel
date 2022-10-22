@@ -41,6 +41,8 @@ fun Profile(){
 
     val array = listOf<Nothing>()
     Column(
+        modifier = Modifier
+            .fillMaxSize(),
     horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(

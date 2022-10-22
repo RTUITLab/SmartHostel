@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -31,13 +32,14 @@ import ru.rtulab.smarthostel.ui.theme.Accent50
 @Composable
 fun ImageDownloadCard(
     modifier:Modifier = Modifier,
-    imageLink: String ="https://example.com/image.jpg"
+    imageLink: String =""
     ){
     val imageSize = remember{ mutableStateOf(Size.Zero)}
     Box(
         modifier = modifier
+            .fillMaxWidth()
     ) {
-        AsyncImage(
+        /*AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageLink)
                 .crossfade(true)
@@ -51,17 +53,30 @@ fun ImageDownloadCard(
                 .onGloballyPositioned {
                     imageSize.value = it.size.toSize()
                 },
+        )*/
+        Image(
+            painter = painterResource(R.drawable.placeholderimage),
+            contentDescription = "",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .onGloballyPositioned {
+                    imageSize.value = it.size.toSize()
+                },
+            contentScale = ContentScale.FillWidth
         )
         Column(
             modifier = Modifier
                 .size(with(LocalDensity.current) { imageSize.value.toDpSize() }),
-            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom,
+
         ) {
 
             Card(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxSize(),
+                    .padding(horizontal = 8.dp, vertical = 0.dp)
+                    .fillMaxWidth(),
                 elevation = 0.dp,
                 backgroundColor = Accent50,
                 shape = RoundedCornerShape(8.dp)
@@ -77,7 +92,7 @@ fun ImageDownloadCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .weight(0.5f, false)
+                            .weight(0.8f, false)
                     ) {
                         Text(
                             text = stringResource(R.string.texttodownload),
@@ -88,7 +103,7 @@ fun ImageDownloadCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .weight(0.5f, false),
+                            .weight(0.2f, false),
                         horizontalAlignment = Alignment.End
                     ) {
                         Image(

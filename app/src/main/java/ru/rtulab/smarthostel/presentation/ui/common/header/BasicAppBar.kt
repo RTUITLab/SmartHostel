@@ -1,11 +1,11 @@
-package ru.rtulab.smarthostel.presentation.ui.common
+package ru.rtulab.smarthostel.presentation.ui.common.header
 
-import android.graphics.fonts.Font
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.rtulab.smarthostel.R
-import ru.rtulab.smarthostel.presentation.ui.common.header.AppBarOption
-import ru.rtulab.smarthostel.presentation.ui.common.header.emptyBackAction
 import ru.rtulab.smarthostel.ui.theme.Accent
 import ru.rtulab.smarthostel.ui.theme.White
 
@@ -25,7 +23,7 @@ import ru.rtulab.smarthostel.ui.theme.White
 fun BasicTopAppBar(
     text: String,
     onBackAction: () -> Unit = emptyBackAction,
-    options: List<AppBarOption> = emptyList()
+    options: List<AppBarOption> = listOf(AppBarOption.Clickable(icon = Icons.Default.Notifications, onClick = {/**/}))
 ) {
     TopAppBar {
         Row(
@@ -49,6 +47,16 @@ fun BasicTopAppBar(
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
+                }else{
+                    IconButton(onClick = {/*open*/}) {
+                        Icon(
+                            Icons.Default.Menu,
+                            contentDescription = stringResource(coil.compose.base.R.string.navigation_menu),
+                            tint = White
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+
                 }
 
                 Text(

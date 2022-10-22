@@ -26,8 +26,7 @@ fun ObjectCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Gray),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.secondary
 
