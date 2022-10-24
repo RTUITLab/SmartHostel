@@ -110,6 +110,8 @@ dependencies {
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
 
 
     // Serialization
@@ -119,5 +121,9 @@ dependencies {
 
     // OpenID auth
     implementation 'net.openid:appauth:0.11.1'
+
+    // Time
+    implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.3.0'
+
 
 }
