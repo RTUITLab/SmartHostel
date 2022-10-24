@@ -13,10 +13,16 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.Converter
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import ru.rtulab.smarthostel.BuildConfig
 import ru.rtulab.smarthostel.common.ResponseHandler
 import ru.rtulab.smarthostel.common.persistence.AuthStateStorage
-import ru.rtulab.smarthostel.data.TokenInterceptor
+import ru.rtulab.smarthostel.data.BasicAuthInterceptor
+import ru.rtulab.smarthostel.data.remote.api.booking.BookingApi
+import ru.rtulab.smarthostel.data.remote.api.objects.ObjectApi
+import ru.rtulab.smarthostel.data.remote.api.objects.ObjectTypeApi
+import ru.rtulab.smarthostel.data.remote.api.profile.ProfileApi
 import javax.inject.Singleton
 
 
@@ -26,32 +32,10 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideTokenInterceptor(
+    fun provideBasicAuthInterceptor(
         authStateStorage: AuthStateStorage,
-        authService: AuthorizationService
-    ) = TokenInterceptor(authStateStorage, authService)
-
-    @Singleton
-    @Provides
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
-    HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG)
-            HttpLoggingInterceptor.Level.BODY
-        else
-            HttpLoggingInterceptor.Level.NONE
-    }
-
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(
-        tokenInterceptor: TokenInterceptor,
-        loggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient =
-        OkHttpClient().newBuilder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(tokenInterceptor)
-            .build()
-
+    ): BasicAuthInterceptor =
+        BasicAuthInterceptor(authStateStorage)
 
 
     private val defaultJson = Json {
@@ -59,10 +43,33 @@ object ApiModule {
         explicitNulls = false
     }
 
+    @Singleton
+    @Provides
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG)
+                HttpLoggingInterceptor.Level.BODY
+            else
+                HttpLoggingInterceptor.Level.NONE
+        }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(
+        basicAuthInterceptor: BasicAuthInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient =
+        OkHttpClient().newBuilder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(basicAuthInterceptor)
+            .build()
+
+
     @ExperimentalSerializationApi
     @Singleton
     @Provides
-    fun provideConverterFactory(): Converter.Factory = defaultJson.asConverterFactory("application/json".toMediaType())
+    fun provideConverterFactory(): Converter.Factory =
+        defaultJson.asConverterFactory("application/json".toMediaType())
 
     @Singleton
     @Provides
@@ -70,7 +77,29 @@ object ApiModule {
         Retrofit.Builder()
             .baseUrl("http://46.175.149.247:8080")
             .client(client)
-            .addConverterFactory(converter)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    }
+
+    @Singleton
+    @Provides
+    fun provideResponseHandler() = ResponseHandler()
+
+    @Singleton
+    @Provides
+    fun provideProfileApi(retrofit: Retrofit): ProfileApi = retrofit.create()
+
+
+    @Singleton
+    @Provides
+    fun provideBookingApi(retrofit: Retrofit): BookingApi = retrofit.create()
+
+
+    @Singleton
+    @Provides
+    fun provideObjectApi(retrofit: Retrofit): ObjectApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideObjectTypeApi(retrofit: Retrofit): ObjectTypeApi = retrofit.create()
+}
