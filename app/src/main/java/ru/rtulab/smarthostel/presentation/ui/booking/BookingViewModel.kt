@@ -3,12 +3,15 @@ package ru.rtulab.smarthostel.presentation.ui.booking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import ru.rtulab.smarthostel.common.Resource
 import ru.rtulab.smarthostel.common.emitInIO
 import ru.rtulab.smarthostel.common.persistence.AuthStateStorage
 import ru.rtulab.smarthostel.data.remote.api.booking.models.BookingDto
+import ru.rtulab.smarthostel.data.remote.api.booking.models.RequestBookingCreate
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithDate
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithoutDate
 import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectDto
@@ -41,5 +44,28 @@ class BookingViewModel @Inject constructor(
     fun onResourceSuccess(objs: List<BookingDto>,objdto:List<ObjectDto>,objType:List<ObjectType>) {
         cachedObjects = objs.map { it.toBooking(objdto.find{ obj -> obj.id == it.objectId}!!.run{toObject(objType.find { t ->t.id == typeId}!!)},) }
         _bookingsFlow.value = cachedObjects
+    }
+
+    //for book
+    var now:Long? = null
+    var cachedObjId = MutableStateFlow<Int>(-1)
+    var cachedWeekDay:Int = 0
+    var beginTime = MutableStateFlow("")
+    var _beginTime = beginTime.asStateFlow()
+
+    var endTime = MutableStateFlow("")
+
+    fun createBook(good:(Boolean)->Unit) = viewModelScope.launch(Dispatchers.IO){
+        val bookingDto:RequestBookingCreate = RequestBookingCreate(
+            objectId = cachedObjId.value,
+            reason ="Ответочка от мобилочки",
+            begin = beginTime.value,
+            end = endTime.value
+        )
+        bookingRepo.createBook(bookingDto).handle(
+            onSuccess = {
+                good(true)
+            }
+        )
     }
 }

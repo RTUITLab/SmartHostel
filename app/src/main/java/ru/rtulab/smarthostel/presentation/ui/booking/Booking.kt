@@ -7,8 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,8 +15,12 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithDate
+import ru.rtulab.smarthostel.presentation.navigation.AppScreen
+import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.ui.common.AppBarTabRow
 import ru.rtulab.smarthostel.presentation.ui.common.LoadingIndicator
 import ru.rtulab.smarthostel.presentation.ui.common.ObjectCard
@@ -39,10 +42,13 @@ fun Booking(
     val objectsDto = objectViewModel.objectsResourceFlow.collectAsState().value
     val typesDto = objectViewModel.objectTypesResourceFlow.collectAsState().value
 
+    val navController = LocalNavController.current
 
     val booking = bookingViewModel.bookingsFlow.collectAsState().value
 
     val pagerState = rememberPagerState()
+    var isRefreshing by remember { mutableStateOf(false) }
+
 
     val tabs = listOf(
         stringResource(R.string.Active),
@@ -55,6 +61,7 @@ fun Booking(
                 modifier = Modifier
                     .padding(16.dp),
                 onClick = {
+                    navController.navigate("${AppScreen.BookingCreate.navLink}")
 
                 },
                 shape = RoundedCornerShape(8.dp),
@@ -122,36 +129,43 @@ fun Booking(
                                     Text(text = msg)
                                 },
                                 onSuccess = { type ->
-                                    bookingViewModel.onResourceSuccess(Dto, obj,type)
-
-                                    when (tabs[currentPage]) {
-                                        stringResource(R.string.Active) -> {
-                                            LazyColumn() {
-                                                items(booking) { b ->
-                                                    ObjectCardWithDate(
-                                                        name = b.name,
-                                                        status = b.status,
-                                                        type = b.type,
-                                                        room = b.room,
-                                                        startTime = b.startTime,
-                                                        endTime = b.endTime,
-                                                        statusColor = Green
-                                                    )
+                                    bookingViewModel.onResourceSuccess(Dto, obj, type)
+                                    SwipeRefresh(
+                                        modifier = Modifier.fillMaxSize(),
+                                        state = rememberSwipeRefreshState(isRefreshing),
+                                        onRefresh = {
+                                            bookingViewModel.onRefresh()
+                                        }
+                                    ) {
+                                        when (tabs[currentPage]) {
+                                            stringResource(R.string.Active) -> {
+                                                LazyColumn() {
+                                                    items(booking) { b ->
+                                                        ObjectCardWithDate(
+                                                            name = b.name,
+                                                            status = b.status,
+                                                            type = b.type,
+                                                            room = b.room,
+                                                            startTime = b.startTime,
+                                                            endTime = b.endTime,
+                                                            statusColor = Green
+                                                        )
+                                                    }
                                                 }
                                             }
-                                        }
-                                        stringResource(R.string.Ended) -> {
-                                            LazyColumn() {
-                                                items(booking) { b ->
-                                                    ObjectCardWithDate(
-                                                        name = b.name,
-                                                        status = b.status,
-                                                        type = b.type,
-                                                        room = b.room,
-                                                        startTime = b.startTime,
-                                                        endTime = b.endTime,
-                                                        statusColor = Green
-                                                    )
+                                            stringResource(R.string.Ended) -> {
+                                                LazyColumn() {
+                                                    items(booking) { b ->
+                                                        ObjectCardWithDate(
+                                                            name = b.name,
+                                                            status = b.status,
+                                                            type = b.type,
+                                                            room = b.room,
+                                                            startTime = b.startTime,
+                                                            endTime = b.endTime,
+                                                            statusColor = Green
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
