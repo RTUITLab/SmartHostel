@@ -22,7 +22,7 @@ fun ObjectCardWithDate(
     name:String="Name",
     status:String ="Status",
     type:String = "Type",
-    owner:String = "Owner",
+    room:String = "Owner",
     startTime:String = "Date Time",
     endTime:String = "Date Time",
     statusColor:Color = MaterialTheme.colors.onSecondary
@@ -84,7 +84,7 @@ fun ObjectCardWithDate(
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 Text(
-                    text = owner,
+                    text = room,
                     fontSize = 14.sp,
                     color = MaterialTheme.colors.onSecondary
 

@@ -21,7 +21,7 @@ fun ObjectCard(
     name:String="Name",
     status:String ="Status",
     type:String = "Type",
-    owner:String = "Owner",
+    room:String = "Owner",
     statusColor:Color = MaterialTheme.colors.onSecondary
 ) {
     Card(
@@ -80,7 +80,7 @@ fun ObjectCard(
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 Text(
-                    text = owner,
+                    text = room,
                     fontSize = 14.sp,
                     color = MaterialTheme.colors.onSecondary
 

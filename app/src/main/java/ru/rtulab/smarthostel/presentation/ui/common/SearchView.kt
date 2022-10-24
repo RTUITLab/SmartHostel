@@ -33,8 +33,8 @@ import ru.rtulab.smarthostel.ui.theme.White50
  */
 @Composable
 fun SearchView(
-    query: TextFieldValue,
-    onQueryChange: (TextFieldValue) -> Unit,
+    query: String,
+    onQueryChange: (String) -> Unit,
     onClearQuery: () -> Unit,
     searching: Boolean,
     modifier: Modifier = Modifier
@@ -56,7 +56,7 @@ fun SearchView(
 
             ) {
 
-                if (query.text.isEmpty()) {
+                if (query.isEmpty()) {
                     SearchHint(modifier.padding(top = 17.dp, bottom = 17.dp, start = 24.dp, end = 8.dp))
                 }
 
@@ -91,7 +91,7 @@ fun SearchView(
                                     .size(36.dp)
                             )
                         }
-                        query.text.isNotEmpty() -> {
+                        query.isNotEmpty() -> {
                             IconButton(onClick = onClearQuery) {
                                 Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                             }
