@@ -32,10 +32,9 @@
 
     <string name="booking_new">Создать бронирование</string>
     <string name="booking_details">Бронирование</string>
-
-
-
-
+    <string name="free">Свободно</string>
+    <string name="busy">Занято</string>
+    <string name="ChoseObject">Выберите Объект</string>
 
 
 </resources>
