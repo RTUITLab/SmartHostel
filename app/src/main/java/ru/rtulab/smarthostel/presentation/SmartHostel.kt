@@ -16,8 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.rtulab.smarthostel.presentation.navigation.AppScreen
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.navigation.NavigationGraph
+import ru.rtulab.smarthostel.presentation.ui.Profile.ProfileViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.BottomSheet
 import ru.rtulab.smarthostel.presentation.ui.common.header.BasicTopAppBar
 import ru.rtulab.smarthostel.presentation.ui.common.bottomsheet.BottomSheetViewModel
@@ -37,7 +39,7 @@ fun SmartHostel(
     appBarViewModel: AppBarViewModel = singletonViewModel(),
     appTabsViewModel: AppTabsViewModel = singletonViewModel(),
     bottomSheetViewModel: BottomSheetViewModel = singletonViewModel(),
-    burgerMenuViewModel: BurgerMenuViewModel = singletonViewModel()
+    burgerMenuViewModel: BurgerMenuViewModel = singletonViewModel(),
 ){
 
     val currentScreen by appBarViewModel.currentScreen.collectAsState()
@@ -81,7 +83,16 @@ fun SmartHostel(
             },
             topBar ={
                 when (currentScreen) {
-
+                    AppScreen.BookingCreate -> BasicTopAppBar(
+                        backgroundColor = Accent,
+                        text = stringResource(currentScreen.screenNameResource),
+                        //onBackAction = onBackAction
+                    )
+                    AppScreen.BookingCreateSecond -> BasicTopAppBar(
+                        backgroundColor = Accent,
+                        text = stringResource(currentScreen.screenNameResource),
+                        //onBackAction = onBackAction
+                    )
                     else -> BasicTopAppBar(
                         text = stringResource(currentScreen.screenNameResource),
                         //onBackAction = onBackAction

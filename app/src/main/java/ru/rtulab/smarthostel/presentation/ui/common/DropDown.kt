@@ -20,12 +20,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectType
 
 @Preview
 @Composable
 fun DropDown(
+    modifier: Modifier = Modifier,
     label:String="label",
-    array:List<String> = listOf("Delhi", "Mumbai", "Chennai", "Kolkata", "Hyderabad", "Bengaluru", "Pune")
+    array:List<String> = listOf("Delhi", "Mumbai", "Chennai", "Kolkata", "Hyderabad", "Bengaluru", "Pune"),
+    seltext:String,
+    selTextfun:(String)->Unit
 ){
 
     // Declaring a boolean value to store
@@ -35,7 +39,6 @@ fun DropDown(
     // Create a list of cities
 
     // Create a string value to store the selected city
-    var mSelectedText = remember { mutableStateOf(array[0] ?:"") }
 
     var mTextFieldSize = remember { mutableStateOf(Size.Zero)}
 
@@ -45,14 +48,14 @@ fun DropDown(
     else
         Icons.Filled.KeyboardArrowDown
 
-    Column(Modifier.padding(20.dp)) {
+    Column(modifier.padding(vertical = 8.dp)) {
 
         // Create an Outlined Text Field
         // with icon and not expanded
         OutlinedTextField(
 
-            value = mSelectedText.value,
-            onValueChange = { mSelectedText.value = it },
+            value = seltext,
+            onValueChange = { selTextfun(it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
@@ -78,7 +81,7 @@ fun DropDown(
         ) {
             array.forEach { label ->
                 DropdownMenuItem(onClick = {
-                    mSelectedText.value = label
+                    selTextfun( label)
                     mExpanded.value = false
                 }) {
                     Text(text = label)

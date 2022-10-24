@@ -1,5 +1,6 @@
 package ru.rtulab.smarthostel.presentation.ui.common
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,10 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.ui.theme.White50
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Preview
 @Composable
@@ -23,10 +28,23 @@ fun ObjectCardWithDate(
     status:String ="Status",
     type:String = "Type",
     room:String = "Owner",
-    startTime:String = "Date Time",
-    endTime:String = "Date Time",
+    startTime:String = "2022-10-24T15:37:00.000+00:00",
+    endTime:String = "2023-10-24T15:37:00.000+00:00",
     statusColor:Color = MaterialTheme.colors.onSecondary
 ) {
+
+    val date: Date = Calendar.getInstance().time
+    /*val dayOfWeek: Int = currentTime.day
+val Month: Int = currentTime.month
+val Year: Int = currentTime.year
+val weekday: String = DateFormatSymbols().shortWeekdays.get(dayOfWeek)*/
+
+    val dayOfTheWeek = DateFormat.format("EE", date) as String // Th
+    //val day = DateFormat.format("dd", date.time) as String // 20
+    val monthString = DateFormat.format("MMM", date) as String // Jun
+    val monthNumber = DateFormat.format("MM", date) as String // 06
+    val year = DateFormat.format("yyyy", date) as String // 2022
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,13 +123,13 @@ fun ObjectCardWithDate(
                 ) {
                     Row() {
                         Text(
-                            text = "Start",
+                            text = stringResource(R.string.timeStart),
                             fontSize = 11.sp
                         )
                     }
                     Row() {
                         Text(
-                            text = startTime,
+                            text = dMYhm(startTime),
                             fontSize = 14.sp
                         )
                     }
@@ -123,13 +141,13 @@ fun ObjectCardWithDate(
                 ) {
                     Row() {
                         Text(
-                            text = "End",
+                            text = stringResource(R.string.timeEnd),
                             fontSize = 11.sp
                         )
                     }
                     Row() {
                         Text(
-                            text = endTime,
+                            text = dMYhm(endTime),
                             fontSize = 14.sp
                         )
                     }
@@ -138,4 +156,13 @@ fun ObjectCardWithDate(
         }
 
     }
+}
+fun dMYhm(date2:String):String{
+    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00").parse(date2)?.time!!
+    return DateFormat.format("dd", date) as String+"."+
+            DateFormat.format("MM", date.toLong()) as String+"."+
+            DateFormat.format("yyyy", date.toLong()) as String+" "+
+            DateFormat.format("hh", date.toLong()) as String+":"+
+            DateFormat.format("mm", date.toLong()) as String
+
 }

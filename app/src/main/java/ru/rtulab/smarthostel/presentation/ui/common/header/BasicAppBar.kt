@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,10 +23,13 @@ import ru.rtulab.smarthostel.ui.theme.White
 @Composable
 fun BasicTopAppBar(
     text: String,
+    backgroundColor:Color = MaterialTheme.colors.background,
     onBackAction: () -> Unit = emptyBackAction,
     options: List<AppBarOption> = listOf(AppBarOption.Clickable(icon = Icons.Default.Notifications, onClick = {/**/}))
 ) {
-    TopAppBar {
+    TopAppBar(
+        backgroundColor = backgroundColor
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

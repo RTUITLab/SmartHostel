@@ -29,6 +29,7 @@ fun ButtonOutlined(
         modifier = modifier.fillMaxWidth(),
         onClick =  onClick ,
         shape = RoundedCornerShape(8.dp),
+        elevation = 0.dp,
         border = BorderStroke(1.dp,colorBorder)
     )
     {
@@ -42,7 +43,7 @@ fun ButtonOutlined(
                 text = text,
                 color = colorBorder,
                 fontSize = 14.sp,
-                lineHeight = 20.sp
+                lineHeight = 10.sp
             )
         }
     }
