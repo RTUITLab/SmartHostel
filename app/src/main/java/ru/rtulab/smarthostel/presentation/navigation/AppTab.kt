@@ -76,7 +76,9 @@ open class AppScreen(
             val navLink: String = route.substringBefore("/{")
         }
     }
-    object BookingNew: AppScreen(R.string.booking_new, "booking/new") // Has back button
+    object BookingCreate: AppScreen(R.string.booking_new, "booking/new") // Has back button
+    object BookingCreateSecond: AppScreen(R.string.booking_new, "booking/new/2") // Has back button
+
 
 
     companion object {
@@ -87,7 +89,8 @@ open class AppScreen(
             Profile,
             ObjectDetails(context.resources.getString(R.string.object_details)),
             BookingDetails(context.resources.getString(R.string.booking_details)),
-            BookingNew
+            BookingCreate,
+            BookingCreateSecond,
         )
     }
 }

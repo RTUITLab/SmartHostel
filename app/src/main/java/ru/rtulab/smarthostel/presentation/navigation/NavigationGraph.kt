@@ -17,6 +17,8 @@ import androidx.navigation.navigation
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.ui.Profile.Profile
 import ru.rtulab.smarthostel.presentation.ui.booking.Booking
+import ru.rtulab.smarthostel.presentation.ui.booking.BookingCreate
+import ru.rtulab.smarthostel.presentation.ui.booking.BookingCreateSecond
 import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.LocalSharedElementsRootScope
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.home.Home
@@ -118,6 +120,12 @@ private fun NavGraphBuilder.bookingGraph(
     ) {
         composable(AppScreen.Booking.route){
             Booking()
+        }
+        composable(AppScreen.BookingCreate.route){
+            BookingCreate()
+        }
+        composable(AppScreen.BookingCreateSecond.route){
+            BookingCreateSecond()
         }
        /* composable(
             route = AppScreen.Booking.route,
