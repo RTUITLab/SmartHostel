@@ -14,15 +14,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.rtulab.smarthostel.AuthViewModel
 import ru.rtulab.smarthostel.R
+import ru.rtulab.smarthostel.presentation.navigation.AppScreen
+import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.ui.authtorization.components.Title
 import ru.rtulab.smarthostel.presentation.ui.common.ButtonFill
+import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
 import ru.rtulab.smarthostel.ui.theme.White
 import ru.rtulab.smarthostel.ui.theme.White50
+import javax.inject.Inject
 
-@Preview
 @Composable
-fun Authtorization(){
+fun Authtorization(
+    onLogin:(String,String) ->Unit,
+){
 
     val selectedLogin = remember { mutableStateOf("") }
     var selectedPassword = remember { mutableStateOf("") }
@@ -68,8 +75,8 @@ fun Authtorization(){
         )
         OutlinedTextField(
 
-            value = selectedLogin.value,
-            onValueChange ={ selectedLogin.value = it },
+            value = selectedPassword.value,
+            onValueChange ={ selectedPassword.value = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
@@ -98,16 +105,16 @@ fun Authtorization(){
             text = stringResource(R.string.Enter),
             colorFill = MaterialTheme.colors.primary,
             onClick = {
-                //
+                onLogin(selectedLogin.value,selectedPassword.value)
             }
         )
         Text(
             text = stringResource(R.string.NothaveAccount),
             modifier = Modifier
-                .padding(top=16.dp)
+                .padding(top = 16.dp)
                 .clickable {
-                //
-            },
+                    //
+                },
             fontSize = 14.sp,
             color = MaterialTheme.colors.primary
         )
