@@ -32,6 +32,7 @@ fun BigTimeItem(
         Card(
             shape = RoundedCornerShape(8.dp),
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
+            elevation =0.dp,
             backgroundColor = Color.Transparent,
             onClick = {
                 //change twoDigits

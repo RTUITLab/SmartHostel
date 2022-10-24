@@ -3,6 +3,7 @@ package ru.rtulab.smarthostel.presentation.ui.dateTime
 import android.graphics.Paint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,7 +39,9 @@ fun LineOfTimeWithSelect(
     val linearIndicatorHeight = 14.dp
     var linearWidth = 240.0f
     Card(
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        backgroundColor = Color.Transparent,
+        elevation = 0.dp
     ) {
         Canvas(
             modifier = Modifier
@@ -47,6 +50,8 @@ fun LineOfTimeWithSelect(
                 .onSizeChanged {
                     linearWidth = it.width.toFloat()
                 }
+                .background(Color.Transparent),
+
 
         ) {
             val y = with(density) {(linearIndicatorHeight).toPx()/2}

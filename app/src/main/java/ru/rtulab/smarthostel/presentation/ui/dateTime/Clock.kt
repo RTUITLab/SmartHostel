@@ -1,6 +1,7 @@
 package ru.rtulab.smarthostel.presentation.ui.dateTime
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,24 +16,42 @@ import ru.rtulab.smarthostel.R
 
 @Preview
 @Composable
-fun Clock(){
-    Column() {
+fun Clock(
+    modifier: Modifier =Modifier,
+    twoDig:Int,
+    twoDigfun:(Int)->Unit,
+    twoDigM:Int,
+    twoDigMfun:(Int)->Unit,
+){
+    Column(
+        modifier = modifier
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row() {
+                Row(
+                    Modifier.clickable {
+                        twoDigfun(((twoDig+1)%24))
+                    }
+                ) {
                     Image(painter =  painterResource(R.drawable.up), contentDescription = "Up")
                 }
                 Row(
                     modifier = Modifier
                         .padding(vertical = 10.dp)
                 ) {
-                    BigTimeItem()
+                    BigTimeItem(
+                        twoDigits = if (twoDig<10) "0$twoDig" else twoDig.toString()
+                    )
                 }
-                Row() {
+                Row(
+                    Modifier.clickable {
+                        twoDigfun(((twoDig+23)%24))
+                    }
+                ) {
                     Image(painter =  painterResource(R.drawable.down), contentDescription = "Up")
                 }
             }
@@ -51,16 +70,26 @@ fun Clock(){
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row() {
+                Row(
+                    Modifier.clickable {
+                        twoDigMfun(((twoDigM+1)%60))
+                    }
+                ) {
                     Image(painter =  painterResource(R.drawable.up), contentDescription = "Up")
                 }
                 Row(
                     modifier = Modifier
                         .padding(vertical = 10.dp)
                 ) {
-                    BigTimeItem()
+                    BigTimeItem(
+                        twoDigits = if (twoDigM<10) "0$twoDigM" else twoDigM.toString()
+                    )
                 }
-                Row() {
+                Row(
+                    Modifier.clickable {
+                        twoDigMfun(((twoDigM+59)%60))
+                    }
+                ) {
                     Image(painter =  painterResource(R.drawable.down), contentDescription = "Up")
                 }
             }
