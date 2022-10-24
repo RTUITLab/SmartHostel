@@ -44,8 +44,8 @@ class AuthStateStorage(context: Context) {
                      user = it1
                  }
                it[USER_PAYLOAD_KEY]?.let { it1 ->
-                   Log.d("COLLECTCOLLECT", it1)
-                   password = Base64.encodeToString(it1.toByteArray(),Base64.DEFAULT)
+                   password = it1
+                   Log.d("COLLECTCOLLECT", password!!)
                }
 
             }
@@ -95,12 +95,12 @@ class AuthStateStorage(context: Context) {
         }
     }
     suspend fun updateUserPassword(password:String) {
-        val payload = Base64.decode(
+        /*val payload = Base64.decode(
             ("$password"),
             Base64.DEFAULT
-        ).decodeToString()
+        ).decodeToString()*/
         dataStore.edit { prefs ->
-            prefs[USER_PAYLOAD_KEY] = payload
+            prefs[USER_PAYLOAD_KEY] = password
         }
     }
 

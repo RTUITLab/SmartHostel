@@ -211,8 +211,8 @@ fun BookingCreateSecond(
                                 text = stringResource(R.string.Book),
                                 colorFill = White,
                                 onClick = {
-                                    bookingViewModel.beginTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 + day * dayOfWeek.value + (leftTwoDig*60+leftTwoDigM)*60000) as String
-                                    bookingViewModel.endTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 + day * dayOfWeek.value + (rightTwoDig*60+rightTwoDigM)*60000) as String
+                                    bookingViewModel.beginTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 - 3*3600000 + day * dayOfWeek.value + (leftTwoDig*60+leftTwoDigM)*60000) as String
+                                    bookingViewModel.endTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 - 3*3600000 + day * dayOfWeek.value + (rightTwoDig*60+rightTwoDigM)*60000) as String
                                     bookingViewModel.createBook(){ good ->
                                         if(good){
                                             runBlocking {
@@ -227,7 +227,6 @@ fun BookingCreateSecond(
                             )
                         }
                     }
-                    Text( text = bookingViewModel._beginTime.collectAsState().value)
                 }
             }
         }

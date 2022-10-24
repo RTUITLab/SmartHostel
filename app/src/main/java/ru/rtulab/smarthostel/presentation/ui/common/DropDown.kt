@@ -1,5 +1,6 @@
 package ru.rtulab.smarthostel.presentation.ui.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectType
+import ru.rtulab.smarthostel.ui.theme.Black
+import ru.rtulab.smarthostel.ui.theme.White
 
 @Preview
 @Composable
@@ -68,7 +71,8 @@ fun DropDown(
                 Icon(icon,"contentDescription",
                     Modifier.clickable { mExpanded.value = !mExpanded.value })
             },
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            readOnly = true
         )
 
         // Create a drop-down menu with list of cities,
@@ -78,13 +82,19 @@ fun DropDown(
             onDismissRequest = { mExpanded.value = false },
             modifier = Modifier
                 .width(with(LocalDensity.current){mTextFieldSize.value.width.toDp()})
+                    .background(White)
         ) {
             array.forEach { label ->
-                DropdownMenuItem(onClick = {
+                DropdownMenuItem(
+                    onClick = {
                     selTextfun( label)
                     mExpanded.value = false
-                }) {
-                    Text(text = label)
+                },
+                ) {
+                    Text(
+                        text = label,
+                        color = Black,
+                    )
                 }
             }
         }

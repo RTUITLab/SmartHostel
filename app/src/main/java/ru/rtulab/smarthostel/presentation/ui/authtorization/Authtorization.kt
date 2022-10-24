@@ -103,7 +103,7 @@ fun Authtorization(
             modifier = Modifier
                 .padding(top=24.dp),
             text = stringResource(R.string.Enter),
-            colorFill = MaterialTheme.colors.primary,
+            colorFill = White,
             onClick = {
                 onLogin(selectedLogin.value,selectedPassword.value)
             }
