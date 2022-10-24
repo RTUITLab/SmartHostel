@@ -35,6 +35,13 @@
     <string name="free">Свободно</string>
     <string name="busy">Занято</string>
     <string name="ChoseObject">Выберите Объект</string>
+    <string name="type">Тип</string>
+    <string name="Continue">Продолжить</string>
+    <string name="Cancel">Отменить</string>
+    <string name="ChoseTime">Укажите период пользования</string>
+    <string name="timeStart">Время начала</string>
+    <string name="timeEnd">Время окончания</string>
+    <string name="Book">Забронировать</string>
 
 
 </resources>
