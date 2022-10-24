@@ -2,6 +2,7 @@ package ru.rtulab.smarthostel.presentation.ui.objects
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
@@ -20,118 +21,173 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.ui.common.AppBarTabRow
+import ru.rtulab.smarthostel.presentation.ui.common.LoadingIndicator
 import ru.rtulab.smarthostel.presentation.ui.common.ObjectCard
 import ru.rtulab.smarthostel.presentation.ui.common.SearchView
+import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
+import ru.rtulab.smarthostel.ui.theme.Green
+import ru.rtulab.smarthostel.ui.theme.Red
 
 @OptIn(ExperimentalPagerApi::class)
 @Preview
 @Composable
-fun Objects() {
+fun Objects(
+     objectViewModel: ObjectViewModel = singletonViewModel()
+) {
+    val objectsDto = objectViewModel.objectsResourceFlow.collectAsState().value
+    val objs = objectViewModel.objectsFlow.collectAsState().value
     val pagerState = rememberPagerState()
-    val arrayString = listOf("First", "Second", "Third")
+    val typesResource = objectViewModel.objectTypesResourceFlow.collectAsState().value
+    typesResource.handle(
+        onLoading = {
+            LoadingIndicator()
+        },
+        onError = { msg ->
+            Text(text = msg)
+        },
+        onSuccess = { types ->
 
-    val tabs = arrayString
+            val tabs = types.map{t -> t.name}
 
-    var isRefreshing by remember { mutableStateOf(false) }
-    Column() {
-        Surface(
-            color = MaterialTheme.colors.primarySurface,
-            contentColor = contentColorFor(MaterialTheme.colors.primarySurface),
-            elevation = AppBarDefaults.TopAppBarElevation
-        ) {
-            AppBarTabRow(
+            var isRefreshing by remember { mutableStateOf(false) }
 
-                pagerState = pagerState,
-                tabs = tabs,
+            val stringSearch = remember { mutableStateOf("") }
+
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                isScrollable = true
-            )
-        }
-
-        HorizontalPager(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalAlignment = Alignment.Top,
-            count = arrayString.size,
-            state = pagerState,
-            itemSpacing = 1.dp
-
-        ) { currentPage ->
-            SwipeRefresh(
-                modifier = Modifier.fillMaxSize(),
-                state = rememberSwipeRefreshState(isRefreshing),
-                onRefresh = {
-                }
+                    .fillMaxSize(),
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                ) {
+                Surface(
 
-                    Row(
+                    color = MaterialTheme.colors.primarySurface,
+                    contentColor = contentColorFor(MaterialTheme.colors.primarySurface),
+                    elevation = AppBarDefaults.TopAppBarElevation
+                ) {
+                    AppBarTabRow(
+
+                        pagerState = pagerState,
+                        tabs = tabs,
                         modifier = Modifier
-                            .padding(vertical = 24.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .fillMaxWidth(),
+                        isScrollable = true
+                    )
+                }
+
+                HorizontalPager(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalAlignment = Alignment.Top,
+                    count = tabs.size,
+                    state = pagerState,
+                    itemSpacing = 1.dp
+
+                ) { currentPage ->
+                    SwipeRefresh(
+                        modifier = Modifier.fillMaxSize(),
+                        state = rememberSwipeRefreshState(isRefreshing),
+                        onRefresh = {
+                            objectViewModel.onRefresh()
+                        }
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(0.9f),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            SearchView(
-                                query = TextFieldValue(""),
-                                onQueryChange = {},
-                                onClearQuery = { /*TODO*/ },
-                                searching = false,
-
-                                )
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(0.1f),
-                            verticalArrangement = Arrangement.Center
+                                .padding(horizontal = 16.dp)
                         ) {
 
-                            IconButton(
+                            Row(
                                 modifier = Modifier
-                                    .height(36.dp)
-                                    .width(36.dp),
-                                onClick = { /*to Filter*/ }
+                                    .padding(vertical = 24.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.filter),
-                                    contentDescription = stringResource(R.string.filter),
+                                Column(
                                     modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(0.9f),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    SideEffect {
+                                        objectViewModel.onSearch(stringSearch.value)
+                                    }
+                                    SearchView(
+                                        query = stringSearch.value,
+                                        onQueryChange = {
+                                            stringSearch.value = it
+                                            objectViewModel.onSearch(stringSearch.value)
+                                        },
+                                        onClearQuery = { stringSearch.value = "" },
+                                        searching = false,
+
+                                        )
+                                    DisposableEffect(Unit) {
+                                        //focusRequester.requestFocus()
+                                        onDispose {
+                                            objectViewModel.onSearch("")
+                                        }
+                                    }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(0.1f),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+
+                                    IconButton(
+                                        modifier = Modifier
+                                            .height(36.dp)
+                                            .width(36.dp),
+                                        onClick = { /*to Filter*/ }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.filter),
+                                            contentDescription = stringResource(R.string.filter),
+                                            modifier = Modifier
+                                        )
+                                    }
+                                }
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = tabs[currentPage],
+                                    color = MaterialTheme.colors.onBackground,
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp
                                 )
                             }
+                            objectsDto.handle(
+                                onLoading = {
+                                    LoadingIndicator()
+                                },
+                                onError = { msg ->
+                                    Text(text = msg)
+                                },
+                                onSuccess = { dto ->
+                                    objectViewModel.onResourceSuccess(dto,types)
+                                    LazyColumn() {
+                                        items(objs) { o ->
+                                            ObjectCard(
+                                                name = o.name,
+                                                status = if(o.status==200) stringResource(R.string.free) else stringResource(R.string.busy),
+                                                type = o.type,
+                                                room = o.room,
+                                                statusColor = if(o.status==200) Green else Red
+                                            )
+                                        }
+                                    }
+                                }
+                            )
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(bottom = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = arrayString[currentPage],
-                            color = MaterialTheme.colors.onBackground,
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp
-                        )
-                    }
-                    val arrayobject = listOf<Nothing>()
-                    LazyColumn() {
-                        items(arrayobject.size) {
-                            ObjectCard()
-                        }
+
                     }
                 }
-
             }
         }
-    }
+    )
 }
 
