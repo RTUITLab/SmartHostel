@@ -2,6 +2,7 @@ package ru.rtulab.smarthostel.common.persistence
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.datastore.createDataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -25,20 +26,28 @@ class AuthStateStorage(context: Context) {
 
     private val dataStore = context.createDataStore(AUTH_STATE_PREFS_NAME)
 
-    private fun Preferences.getAuthState() = this[AUTH_STATE_KEY]?.let {
+    /*private fun Preferences.getAuthState() = this[AUTH_STATE_KEY]?.let {
         AuthState.jsonDeserialize(it)
-    } ?: AuthState()
+    } ?: AuthState()*/
 
-    val authStateFlow = dataStore.data.map { it.getAuthState() }
+    val authStateFlow = dataStore.data
 
-    // This is a workaround for token refreshment, since authStateFlow.last() in TokenInterceptor.getAccessToken() freezes HTTP requests
-    var latestAuthState: AuthState = runBlocking { authStateFlow.first() }
-        private set
+    var user:String? = null
+    var password:String? = null
+
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            authStateFlow.collect {
-                latestAuthState = it
+            authStateFlow.collect{
+                 it[USER_ID_KEY]?.let { it1 ->
+                     Log.d("COLLECTCOLLECT", it1)
+                     user = it1
+                 }
+               it[USER_PAYLOAD_KEY]?.let { it1 ->
+                   Log.d("COLLECTCOLLECT", it1)
+                   password = Base64.encodeToString(it1.toByteArray(),Base64.DEFAULT)
+               }
+
             }
         }
     }
@@ -47,12 +56,12 @@ class AuthStateStorage(context: Context) {
 
     //val userClaimsFlow = dataStore.data.map { it.getUserClaims() }
 
-    suspend fun resetAuthStateWithConfig(config: AuthorizationServiceConfiguration?) {
+    /*suspend fun resetAuthStateWithConfig(config: AuthorizationServiceConfiguration?) {
         val clearedAuthState = config?.let { AuthState(it) } ?: AuthState()
         dataStore.edit { prefs ->
             prefs[AUTH_STATE_KEY] = clearedAuthState.jsonSerializeString()
         }
-    }
+    }*/
 
     suspend fun resetUserClaims() {
         dataStore.edit { prefs ->
@@ -60,27 +69,6 @@ class AuthStateStorage(context: Context) {
         }
     }
 
-    suspend fun updateAuthState(
-        authResponse: AuthorizationResponse,
-        authException: AuthorizationException?
-    ) {
-        dataStore.edit { prefs ->
-            prefs[AUTH_STATE_KEY] = prefs.getAuthState().apply {
-                update(authResponse, authException)
-            }.jsonSerializeString()
-        }
-    }
-
-    suspend fun updateAuthState(
-        tokenResponse: TokenResponse,
-        tokenException: AuthorizationException?
-    ) {
-        dataStore.edit { prefs ->
-            prefs[AUTH_STATE_KEY] = prefs.getAuthState().apply {
-                update(tokenResponse, tokenException)
-            }.jsonSerializeString()
-        }
-    }
 
     suspend fun updateAuthState(
         authState: AuthState
@@ -91,16 +79,24 @@ class AuthStateStorage(context: Context) {
     }
 
     val userIdFlow = dataStore.data.map { it[USER_ID_KEY] ?: "" }
-
-    suspend fun updateUserId(userId: String) {
+    suspend fun resetUserId() {
         dataStore.edit { prefs ->
-            prefs[USER_ID_KEY] = userId
+            prefs.remove(USER_ID_KEY)
         }
     }
-
-    suspend fun updateUserPayload(accessToken: String) {
+    suspend fun updateUserId(user: String) {
+        dataStore.edit { prefs ->
+            prefs[USER_ID_KEY] = user
+        }
+    }
+    suspend fun resetUserPassword() {
+        dataStore.edit { prefs ->
+            prefs.remove(USER_PAYLOAD_KEY)
+        }
+    }
+    suspend fun updateUserPassword(password:String) {
         val payload = Base64.decode(
-            accessToken.substringAfter('.').substringBefore('.'),
+            ("$password"),
             Base64.DEFAULT
         ).decodeToString()
         dataStore.edit { prefs ->
@@ -109,9 +105,9 @@ class AuthStateStorage(context: Context) {
     }
 
     suspend fun endSession() {
-        val config = latestAuthState.authorizationServiceConfiguration
-        resetAuthStateWithConfig(config)
-        resetUserClaims()
+       // val config = latestAuthState.authorizationServiceConfiguration
+        //resetAuthStateWithConfig(config)
+        //resetUserClaims()
     }
 
 }
