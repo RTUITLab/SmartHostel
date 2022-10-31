@@ -1,5 +1,6 @@
 package ru.rtulab.smarthostel.presentation.ui.objects
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,8 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.rtulab.smarthostel.R
+import ru.rtulab.smarthostel.presentation.navigation.AppScreen
+import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.ui.common.AppBarTabRow
 import ru.rtulab.smarthostel.presentation.ui.common.LoadingIndicator
 import ru.rtulab.smarthostel.presentation.ui.common.ObjectCard
@@ -34,10 +37,22 @@ import ru.rtulab.smarthostel.ui.theme.Red
 fun Objects(
      objectViewModel: ObjectViewModel = singletonViewModel()
 ) {
+    val navController = LocalNavController.current
+
+
     val objectsDto = objectViewModel.objectsResourceFlow.collectAsState().value
     val objs = objectViewModel.objectsFlow.collectAsState().value
     val pagerState = rememberPagerState()
     val typesResource = objectViewModel.objectTypesResourceFlow.collectAsState().value
+    val roomsResource = objectViewModel.objectRoomsResourceFlow.collectAsState().value
+    roomsResource.handle(
+        onLoading = {
+            LoadingIndicator()
+        },
+        onError = { msg ->
+            Text(text = msg)
+        },
+        onSuccess = { rooms ->
     typesResource.handle(
         onLoading = {
             LoadingIndicator()
@@ -47,7 +62,7 @@ fun Objects(
         },
         onSuccess = { types ->
 
-            val tabs = types.map{t -> t.name}
+            val tabs = types.map { t -> t.name }
 
             var isRefreshing by remember { mutableStateOf(false) }
 
@@ -168,15 +183,25 @@ fun Objects(
                                     Text(text = msg)
                                 },
                                 onSuccess = { dto ->
-                                    objectViewModel.onResourceSuccess(dto,types)
-                                    LazyColumn() {
+                                    objectViewModel.onResourceSuccess(dto, types,rooms)
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                    ) {
                                         items(objs) { o ->
                                             ObjectCard(
+                                                modifier = Modifier
+                                                    .clickable {
+                                                        navController.navigate("${AppScreen.ObjectDetails.navLink}/${o.id}")
+
+                                                    },
                                                 name = o.name,
-                                                status = if(o.status==200) stringResource(R.string.free) else stringResource(R.string.busy),
+                                                status = if (o.status == 200) stringResource(R.string.free) else stringResource(
+                                                    R.string.busy
+                                                ),
                                                 type = o.type,
-                                                room = o.room,
-                                                statusColor = if(o.status==200) Green else Red
+                                                room ="Комната №${o.room}",
+                                                statusColor = if (o.status == 200) Green else Red
                                             )
                                         }
                                     }
@@ -187,6 +212,8 @@ fun Objects(
                     }
                 }
             }
+        }
+    )
         }
     )
 }

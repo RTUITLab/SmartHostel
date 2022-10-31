@@ -1,6 +1,11 @@
 package ru.rtulab.smarthostel.presentation.ui.booking
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,29 +23,28 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.rtulab.smarthostel.R
-import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithDate
 import ru.rtulab.smarthostel.presentation.navigation.AppScreen
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
 import ru.rtulab.smarthostel.presentation.ui.common.AppBarTabRow
 import ru.rtulab.smarthostel.presentation.ui.common.LoadingIndicator
-import ru.rtulab.smarthostel.presentation.ui.common.ObjectCard
 import ru.rtulab.smarthostel.presentation.ui.common.ObjectCardWithDate
 import ru.rtulab.smarthostel.presentation.ui.objects.ObjectViewModel
 import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
-import ru.rtulab.smarthostel.ui.theme.Accent
-import ru.rtulab.smarthostel.ui.theme.Green
-import ru.rtulab.smarthostel.ui.theme.White
+import ru.rtulab.smarthostel.ui.theme.*
 
 @OptIn(ExperimentalPagerApi::class)
 @Preview
 @Composable
 fun Booking(
     bookingViewModel: BookingViewModel = singletonViewModel(),
+    bookingItemViewModel: BookingItemViewModel = singletonViewModel(),
     objectViewModel: ObjectViewModel = singletonViewModel()
 ){
     val bookingsDto = bookingViewModel.bookingsResourceFlow.collectAsState().value
     val objectsDto = objectViewModel.objectsResourceFlow.collectAsState().value
     val typesDto = objectViewModel.objectTypesResourceFlow.collectAsState().value
+    val roomsDto = objectViewModel.objectRoomsResourceFlow.collectAsState().value
+
 
     val navController = LocalNavController.current
 
@@ -53,9 +57,13 @@ fun Booking(
     val tabs = listOf(
         stringResource(R.string.Active),
         stringResource(R.string.Ended),
+        stringResource(R.string.Canceled),
+        stringResource(R.string.Awaited)
 
     )
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier
@@ -74,7 +82,10 @@ fun Booking(
         }
     ) {
 
-    Column() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
         Surface(
             color = MaterialTheme.colors.primarySurface,
@@ -95,12 +106,22 @@ fun Booking(
 
 
         HorizontalPager(
+            modifier = Modifier.fillMaxSize(),
             count = tabs.size,
             state = pagerState
 
         ) { currentPage ->
+            SwipeRefresh(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = {
+                    bookingViewModel.onRefresh()
+                }
+            ) {
             Column(
                 modifier = Modifier
+                    .fillMaxSize()
                     .padding(horizontal = 16.dp)
             ) {
 
@@ -129,23 +150,33 @@ fun Booking(
                                     Text(text = msg)
                                 },
                                 onSuccess = { type ->
-                                    bookingViewModel.onResourceSuccess(Dto, obj, type)
-                                    SwipeRefresh(
-                                        modifier = Modifier.fillMaxSize(),
-                                        state = rememberSwipeRefreshState(isRefreshing),
-                                        onRefresh = {
-                                            bookingViewModel.onRefresh()
-                                        }
-                                    ) {
+                                    roomsDto.handle(
+                                        onLoading = {
+                                            LoadingIndicator()
+                                        },
+                                        onError = { msg ->
+                                            Text(text = msg)
+                                        },
+                                        onSuccess = { room ->
+                                    bookingViewModel.onResourceSuccess(Dto, obj, type,room)
+
                                         when (tabs[currentPage]) {
                                             stringResource(R.string.Active) -> {
-                                                LazyColumn() {
-                                                    items(booking) { b ->
+                                                LazyColumn(
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                ) {
+                                                    items(booking.sortedBy { it.startTime }.reversed().filter { it.status== "ACTIVE" }) { b ->
                                                         ObjectCardWithDate(
+                                                            modifier = Modifier
+                                                                .clickable {
+                                                                    navController.navigate("${AppScreen.BookingDetails.navLink}/${b.id}")
+
+                                                                },
                                                             name = b.name,
                                                             status = b.status,
                                                             type = b.type,
-                                                            room = b.room,
+                                                            room = "Комната №${b.room}",
                                                             startTime = b.startTime,
                                                             endTime = b.endTime,
                                                             statusColor = Green
@@ -154,28 +185,81 @@ fun Booking(
                                                 }
                                             }
                                             stringResource(R.string.Ended) -> {
-                                                LazyColumn() {
-                                                    items(booking) { b ->
+                                                LazyColumn(
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                ) {
+                                                    items(booking.sortedBy { it.startTime }.reversed().filter { it.status== "DONE" }) { b ->
                                                         ObjectCardWithDate(
+                                                            modifier = Modifier
+                                                                .clickable {
+                                                                    navController.navigate("${AppScreen.BookingDetails.navLink}/${b.id}")
+                                                                },
                                                             name = b.name,
                                                             status = b.status,
                                                             type = b.type,
-                                                            room = b.room,
+                                                            room = "Комната №${b.room}",
                                                             startTime = b.startTime,
                                                             endTime = b.endTime,
-                                                            statusColor = Green
+                                                            statusColor = White50
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            stringResource(R.string.Awaited) -> {
+                                                LazyColumn(
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                ) {
+                                                    items(booking.sortedBy { it.startTime }.reversed().filter { it.status== "AWAITED" }) { b ->
+                                                        ObjectCardWithDate(
+                                                            modifier = Modifier
+                                                                .clickable {
+                                                                    navController.navigate("${AppScreen.BookingDetails.navLink}/${b.id}")
+                                                                },
+                                                            name = b.name,
+                                                            status = b.status,
+                                                            type = b.type,
+                                                            room = "Комната №${b.room}",
+                                                            startTime = b.startTime,
+                                                            endTime = b.endTime,
+                                                            statusColor = White
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            stringResource(R.string.Canceled) -> {
+                                                LazyColumn(
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                ) {
+                                                    items(booking.sortedBy { it.startTime }.reversed().filter { it.status== "CANCELED" }) { b ->
+                                                        ObjectCardWithDate(
+                                                            modifier = Modifier
+                                                                .clickable {
+                                                                    navController.navigate("${AppScreen.BookingDetails.navLink}/${b.id}")
+                                                                },
+                                                            name = b.name,
+                                                            status = b.status,
+                                                            type = b.type,
+                                                            room = "Комната №${b.room}",
+                                                            startTime = b.startTime,
+                                                            endTime = b.endTime,
+                                                            statusColor = Red
                                                         )
                                                     }
                                                 }
                                             }
                                         }
-                                    }
+                                    })
                                 }
 
 )
                         }
                     )
                 })
+            }
+
             }
 
         }

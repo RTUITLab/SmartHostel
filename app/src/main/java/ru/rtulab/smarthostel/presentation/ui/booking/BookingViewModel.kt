@@ -1,5 +1,6 @@
 package ru.rtulab.smarthostel.presentation.ui.booking
 
+import androidx.compose.material.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import ru.rtulab.smarthostel.data.remote.api.booking.models.RequestBookingCreate
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithDate
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectWithoutDate
 import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectDto
+import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectRoom
 import ru.rtulab.smarthostel.data.remote.api.objects.models.ObjectType
 import ru.rtulab.smarthostel.data.repository.BookingRepository
 import ru.rtulab.smarthostel.data.repository.ObjectRepository
@@ -41,12 +43,14 @@ class BookingViewModel @Inject constructor(
     private var _bookingsFlow = MutableStateFlow(cachedObjects)
     val bookingsFlow = _bookingsFlow.asStateFlow()
 
-    fun onResourceSuccess(objs: List<BookingDto>,objdto:List<ObjectDto>,objType:List<ObjectType>) {
-        cachedObjects = objs.map { it.toBooking(objdto.find{ obj -> obj.id == it.objectId}!!.run{toObject(objType.find { t ->t.id == typeId}!!)},) }
+    fun onResourceSuccess(objs: List<BookingDto>,objdto:List<ObjectDto>,objType:List<ObjectType>,objRoom:List<ObjectRoom>) {
+        cachedObjects = objs.map { it.toBooking(objdto.find{ obj -> obj.id == it.objectId}!!.run{toObject(objType.find { t ->t.id == typeId}!!,objRoom.find { t ->t.id == roomId}!!)}) }
         _bookingsFlow.value = cachedObjects
     }
 
     //for book
+    val snackbarHostState = SnackbarHostState()
+
     var now:Long? = null
     var cachedObjId = MutableStateFlow<Int>(-1)
     var cachedWeekDay:Int = 0
@@ -65,7 +69,12 @@ class BookingViewModel @Inject constructor(
         bookingRepo.createBook(bookingDto).handle(
             onSuccess = {
                 good(true)
+                showSnackbar("Успешно забронирован")
             }
         )
     }
+    private suspend fun showSnackbar(text: String) {
+        snackbarHostState.showSnackbar(text)
+    }
+
 }
