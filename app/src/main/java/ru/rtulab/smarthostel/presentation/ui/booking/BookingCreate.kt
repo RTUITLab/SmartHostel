@@ -33,12 +33,13 @@ fun BookingCreate(
     val navController = LocalNavController.current
 
     Surface(
+
         color = Accent
     ) {
 
         Column(
             modifier = Modifier
-                .padding(8.dp),
+                .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.Center
         ) {
             H1(

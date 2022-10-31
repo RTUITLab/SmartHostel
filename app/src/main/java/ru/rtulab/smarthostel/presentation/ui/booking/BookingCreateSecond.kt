@@ -10,9 +10,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.navigation.AppScreen
@@ -48,14 +47,16 @@ fun BookingCreateSecond(
 
     val navController = LocalNavController.current
 
+    val snackbarHostState = SnackbarHostState()
+Scaffold(
+    scaffoldState = rememberScaffoldState( snackbarHostState = bookingViewModel.snackbarHostState)
+) {
+
     Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
         color = Accent
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier =Modifier
                 .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.Center
 
@@ -66,11 +67,6 @@ fun BookingCreateSecond(
                 text = stringResource(R.string.ChoseTime)
             )
             val date: Date = Calendar.getInstance().time
-            /*val dayOfWeek: Int = currentTime.day
-        val Month: Int = currentTime.month
-        val Year: Int = currentTime.year
-        val weekday: String = DateFormatSymbols().shortWeekdays.get(dayOfWeek)*/
-
             val dayOfTheWeek = DateFormat.format("EE", date) as String // Th
             //val day = DateFormat.format("dd", date.time) as String // 20
             val monthString = DateFormat.format("MMM", date) as String // Jun
@@ -82,15 +78,39 @@ fun BookingCreateSecond(
             val day = 86400000
 
             val dayOfWeek = remember { mutableStateOf(0) }
-            val (leftTwoDig,ltd) = remember { mutableStateOf(DateFormat.format("hh", (date.time+3600000*12)).toString().toInt())}
-            val (leftTwoDigM,ltdM) = remember { mutableStateOf(DateFormat.format("mm", date.time).toString().toInt())}
-            val (rightTwoDig,rtd) = remember { mutableStateOf(DateFormat.format("hh", (date.time+3600000)).toString().toInt())}
-            val (rightTwoDigM,rtdM) = remember { mutableStateOf(DateFormat.format("mm", (date.time)).toString().toInt())}
+            val (leftTwoDig, ltd) = remember {
+                mutableStateOf(
+                    DateFormat.format(
+                        "hh",
+                        (date.time + 3600000 * 12)
+                    ).toString().toInt()
+                )
+            }
+            val (leftTwoDigM, ltdM) = remember {
+                mutableStateOf(
+                    DateFormat.format("mm", date.time).toString().toInt()
+                )
+            }
+            val (rightTwoDig, rtd) = remember {
+                mutableStateOf(
+                    DateFormat.format(
+                        "hh",
+                        (date.time + 3600000)
+                    ).toString().toInt()
+                )
+            }
+            val (rightTwoDigM, rtdM) = remember {
+                mutableStateOf(
+                    DateFormat.format(
+                        "mm",
+                        (date.time)
+                    ).toString().toInt()
+                )
+            }
 
             val context = LocalContext.current
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(vertical = 24.dp),
             ) {
                 Text(text = monthString + " " + year)
@@ -100,7 +120,10 @@ fun BookingCreateSecond(
                     LazyRow() {
                         items(listOf<Int>(0, 1, 2, 3, 4, 5, 6)) { num ->
                             WeekDayItem(
-                                weekDay = DateFormat.format("EE", date.time+3600000*12 + day * num) as String,
+                                weekDay = DateFormat.format(
+                                    "EE",
+                                    date.time + 3600000 * 12 + day * num
+                                ) as String,
                                 date = DateFormat.format("dd", date.time + day * num) as String,
                                 active = num == dayOfWeek.value,
                                 onClick = {
@@ -114,10 +137,12 @@ fun BookingCreateSecond(
                     modifier = Modifier
                         .padding()
                 ) {
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.5f, false)
-                        .padding(end = 8.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f, false)
+                            .padding(end = 8.dp)
+                    ) {
 
                         Text(
                             modifier = Modifier.padding(top = 24.dp),
@@ -131,10 +156,12 @@ fun BookingCreateSecond(
                             ltdM
                         )
                     }
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.5f, false)
-                        .padding(start = 8.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f, false)
+                            .padding(start = 8.dp)
+                    ) {
                         Text(
                             modifier = Modifier.padding(top = 24.dp),
 
@@ -150,13 +177,13 @@ fun BookingCreateSecond(
                     }
                 }
                 Row(
-                    modifier =Modifier
+                    modifier = Modifier
                         .padding(top = 30.dp)
                 ) {
 
                     LineOfTimeWithSelect(
-                        startSelect = (leftTwoDig*60+leftTwoDigM)/(24*60f),
-                        endSelect = (rightTwoDig*60+rightTwoDigM)/(24*60f),
+                        startSelect = (leftTwoDig * 60 + leftTwoDigM) / (24 * 60f),
+                        endSelect = (rightTwoDig * 60 + rightTwoDigM) / (24 * 60f),
                     )
                 }
                 Row(
@@ -164,7 +191,7 @@ fun BookingCreateSecond(
                         .fillMaxWidth()
                         .padding(top = 3.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         text = "00:00"
                     )
@@ -211,15 +238,19 @@ fun BookingCreateSecond(
                                 text = stringResource(R.string.Book),
                                 colorFill = White,
                                 onClick = {
-                                    bookingViewModel.beginTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 - 3*3600000 + day * dayOfWeek.value + (leftTwoDig*60+leftTwoDigM)*60000) as String
-                                    bookingViewModel.endTime.value = DateFormat.format("yyyy-MM-dd'T'HH:mm:ss.000+03:00", date.time-(date.time%(86400000))+86400000 - 3*3600000 + day * dayOfWeek.value + (rightTwoDig*60+rightTwoDigM)*60000) as String
-                                    bookingViewModel.createBook(){ good ->
-                                        if(good){
-                                            runBlocking {
-                                                val snackbarHostState = SnackbarHostState()
-                                                snackbarHostState.showSnackbar("Good Boy")
-                                                navController.navigate("${AppScreen.Booking.navLink}")
-                                            }
+                                    bookingViewModel.beginTime.value = DateFormat.format(
+                                        "yyyy-MM-dd'T'HH:mm:ss.000+03:00",
+                                        date.time - (date.time % (86400000)) /*- 3*3600000*/ + day * dayOfWeek.value + (leftTwoDig * 60 + leftTwoDigM) * 60000
+                                    ) as String
+                                    bookingViewModel.endTime.value = DateFormat.format(
+                                        "yyyy-MM-dd'T'HH:mm:ss.000+03:00",
+                                        date.time - (date.time % (86400000)) /*- 3*3600000*/ + day * dayOfWeek.value + (rightTwoDig * 60 + rightTwoDigM) * 60000
+                                    ) as String
+                                    bookingViewModel.createBook() { good ->
+                                        if (good) {
+                                            /*runBlocking(Dispatchers.Main) {
+                                                navController.navigate("${AppScreen.Home.navLink}")
+                                            }*/
                                         }
                                     }
 
@@ -229,6 +260,7 @@ fun BookingCreateSecond(
                     }
                 }
             }
+        }
         }
     }
 }
