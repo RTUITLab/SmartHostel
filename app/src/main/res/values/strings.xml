@@ -42,6 +42,20 @@
     <string name="timeStart">Время начала</string>
     <string name="timeEnd">Время окончания</string>
     <string name="Book">Забронировать</string>
+    <string name="Canceled">Отменненые</string>
+    <string name="Awaited">Ожидаемые</string>
+    <string name="period_used">Период использования</string>
+    <string name="Start">Начало</string>
+    <string name="End">Окончание</string>
+    <string name="CancelBooking">Отменить бронирование</string>
+    <string name="EndBoooking">Завершить бронирование</string>
+    <string name="SomethingWrong">Что-то не так</string>
+    <string name="Busy">Загруженность</string>
+    <string name="typeObject">Тип оборудования</string>
+    <string name="status">Status</string>
+    <string name="description">Описание</string>
+    <string name="gotoBook">Перейти к бронированию</string>
+    <string name="SayAboutCrash">Сообщить о поломке</string>
 
 
 </resources>
