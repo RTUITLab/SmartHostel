@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ObjectWithDate(
+    val id:String,
+    val objectId:String,
     val name:String,
     val status:String,
     val type:String,

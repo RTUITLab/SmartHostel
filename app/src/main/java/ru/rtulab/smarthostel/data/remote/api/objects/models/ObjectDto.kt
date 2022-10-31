@@ -14,11 +14,13 @@ data class ObjectDto(
     val statusId:Int,
     val roomId:Int,
 ){
-    fun toObject(objType: ObjectType) = ObjectWithoutDate(
+    fun toObject(objType: ObjectType,objRoom:ObjectRoom) = ObjectWithoutDate(
+        id =id.toString(),
         name =name,
         type = objType.name,
         status = statusId,
-        room = "$roomId"
+        room = objRoom.name,
+        description = description
 
     )
 }

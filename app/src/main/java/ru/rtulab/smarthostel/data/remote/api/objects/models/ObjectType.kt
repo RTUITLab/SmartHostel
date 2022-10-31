@@ -3,6 +3,12 @@ package ru.rtulab.smarthostel.data.remote.api.objects.models
 data class ObjectType(
     val id:Int,
     val name:String,
-    //val schema:String,
-   // val statusTypes:List<StatusType>
+
+)
+data class ObjectRoom(
+    val id:Int,
+    val position:String,
+    val name:String,
+    val typeId:Int
+
 )
