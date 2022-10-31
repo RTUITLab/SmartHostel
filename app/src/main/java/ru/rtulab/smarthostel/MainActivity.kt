@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.CompositionLocalProvider
@@ -18,6 +19,7 @@ import ru.rtulab.smarthostel.presentation.ui.authtorization.Authtorization
 import ru.rtulab.smarthostel.presentation.viewmodel.LocalActivity
 import ru.rtulab.smarthostel.ui.theme.SmartHostelTheme
 
+@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
