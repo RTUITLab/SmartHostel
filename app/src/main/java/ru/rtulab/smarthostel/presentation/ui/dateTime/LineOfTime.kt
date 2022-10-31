@@ -26,6 +26,8 @@ import ru.rtulab.smarthostel.ui.theme.Red
 fun LineOfTime(
     starttime:String = "0",
     endtime:String = "1",
+    colorFree:Color = Green,
+    colorBusy:Color = Red,
     arrayBusyness: List<TimeAndStatus> = mutableListOf(TimeAndStatus(false,0f to 0.3f),TimeAndStatus(true,0.3f to 0.6f),TimeAndStatus(false,0.6f to 0.9f),TimeAndStatus(true,0.9f to 1f))
 ){
     val density = LocalDensity.current
