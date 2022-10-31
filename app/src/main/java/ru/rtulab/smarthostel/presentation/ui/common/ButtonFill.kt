@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.rtulab.smarthostel.ui.theme.Accent
+import ru.rtulab.smarthostel.ui.theme.White
 
 @OptIn(ExperimentalMaterialApi::class)
 @Preview
@@ -39,7 +40,7 @@ fun ButtonFill(
                 modifier = Modifier
                     .padding(0.dp, 12.dp),
                 text = text,
-                color = Accent,
+                color = if(colorFill== Accent) White else Accent,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
