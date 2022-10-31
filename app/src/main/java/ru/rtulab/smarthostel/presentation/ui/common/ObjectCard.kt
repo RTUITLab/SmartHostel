@@ -18,14 +18,16 @@ import ru.rtulab.smarthostel.ui.theme.White50
 @Preview
 @Composable
 fun ObjectCard(
+    modifier:Modifier = Modifier,
     name:String="Name",
     status:String ="Status",
     type:String = "Type",
     room:String = "Owner",
+
     statusColor:Color = MaterialTheme.colors.onSecondary
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.secondary
@@ -77,11 +79,12 @@ fun ObjectCard(
                 )
             }
             Row(
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 8.dp)
             ) {
                 Text(
                     text = room,
                     fontSize = 14.sp,
+                    lineHeight = 20.sp,
                     color = MaterialTheme.colors.onSecondary
 
                 )

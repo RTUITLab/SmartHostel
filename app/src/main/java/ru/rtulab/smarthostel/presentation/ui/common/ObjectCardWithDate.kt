@@ -24,6 +24,7 @@ import java.util.*
 @Preview
 @Composable
 fun ObjectCardWithDate(
+    modifier: Modifier = Modifier,
     name:String="Name",
     status:String ="Status",
     type:String = "Type",
@@ -46,7 +47,7 @@ val weekday: String = DateFormatSymbols().shortWeekdays.get(dayOfWeek)*/
     val year = DateFormat.format("yyyy", date) as String // 2022
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 8.dp),
         shape = RoundedCornerShape(8.dp),
@@ -158,11 +159,13 @@ val weekday: String = DateFormatSymbols().shortWeekdays.get(dayOfWeek)*/
     }
 }
 fun dMYhm(date2:String):String{
-    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS+00:00").parse(date2)?.time!!
+    val simple =SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS+00:00")
+    val date = simple.parse(date2)?.time!!
+
     return DateFormat.format("dd", date) as String+"."+
             DateFormat.format("MM", date.toLong()) as String+"."+
             DateFormat.format("yyyy", date.toLong()) as String+" "+
-            DateFormat.format("hh", date.toLong()) as String+":"+
+            DateFormat.format("kk", date.toLong()) as String+":"+
             DateFormat.format("mm", date.toLong()) as String
 
 }
