@@ -49,6 +49,21 @@ sealed class AppTab(
                 Booking,
                 Profile,
             )
+
+        fun saver() = Saver<AppTab, Bundle>(
+            save = { it.saveState() },
+            restore = { restoreState(it) }
+        )
+
+        private fun restoreState(bundle: Bundle) = when (bundle.getString(SCREEN_KEY, null)) {
+
+            Profile.route   -> Profile
+            Home.route  -> Home
+            Objects.route -> Objects
+            Booking.route   -> Booking
+            else            -> {throw IllegalArgumentException("Invalid route. Maybe you forgot to add a new screen to AppTabSaver.kt?")}
+        }
+
     }
 }
 
