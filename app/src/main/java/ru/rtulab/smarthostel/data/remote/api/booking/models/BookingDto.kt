@@ -14,15 +14,18 @@ data class BookingDto(
     val begin:String,
     val end:String,
     val objectId:Int,
+    val status:String,
     val resident:Int
 ){
     fun toBooking(obj: ObjectWithoutDate) = ObjectWithDate(
+        id = id.toString(),
+        objectId = obj.id,
         startTime = begin,
         endTime = end,
         room = obj.room,
         name = obj.name,
         type = obj.type,
-        status = "${obj.status}"
+        status = status
 
     )
 }
