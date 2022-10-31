@@ -19,10 +19,13 @@ import ru.rtulab.smarthostel.presentation.ui.Profile.Profile
 import ru.rtulab.smarthostel.presentation.ui.booking.Booking
 import ru.rtulab.smarthostel.presentation.ui.booking.BookingCreate
 import ru.rtulab.smarthostel.presentation.ui.booking.BookingCreateSecond
+import ru.rtulab.smarthostel.presentation.ui.booking.BookingDetails
 import ru.rtulab.smarthostel.presentation.ui.common.sharedElements.LocalSharedElementsRootScope
 import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.home.Home
+import ru.rtulab.smarthostel.presentation.ui.objects.ObjectDetals
 import ru.rtulab.smarthostel.presentation.ui.objects.Objects
+import ru.rtulab.smarthostel.presentation.viewmodel.hiltViewModel
 
 @Composable
 fun NavigationGraph(
@@ -95,19 +98,22 @@ private fun NavGraphBuilder.objectsGraph(
         route = AppTab.Objects.route
     ) {
         composable(AppScreen.Objects.route){
-            Objects()
+            Objects(
+            )
         }
-        /*composable(
-            route = AppScreen.Objects.route,
+        composable(
+            route = AppScreen.ObjectDetails.route,
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern =
-                        "https://"+*//*${resources.getString(R.string.HOST_URI)}*//*"/objects/{objectId}"
+                        "https://"+ resources.getString(R.string.HOST_URI) +"/objects/{objectId}"
                 }
             )
         ) {
-         //   ObjectDetails()
-        }*/
+            ObjectDetals(
+                objectId = it.arguments?.getString("objectId")!!
+            )
+        }
     }
 
 }
@@ -119,7 +125,9 @@ private fun NavGraphBuilder.bookingGraph(
         route = AppTab.Booking.route
     ) {
         composable(AppScreen.Booking.route){
-            Booking()
+            Booking(
+
+            )
         }
         composable(AppScreen.BookingCreate.route){
             BookingCreate()
@@ -127,17 +135,20 @@ private fun NavGraphBuilder.bookingGraph(
         composable(AppScreen.BookingCreateSecond.route){
             BookingCreateSecond()
         }
-       /* composable(
-            route = AppScreen.Booking.route,
+        composable(
+            route = AppScreen.BookingDetails.route,
             deepLinks = listOf(
                 navDeepLink {
                     uriPattern =
-                        "https://"+*//*${resources.getString(R.string.HOST_URI)}*//*"/booking/{bookingId}"
+                        "https://"+"${resources.getString(R.string.HOST_URI)}/booking/{bookingId}"
                 }
             )
         ) {
-            //   BookingDetails()
-        }*/
+
+                BookingDetails(
+                    bookingId = it.arguments?.getString("bookingId")!!
+                )
+        }
     }
 
 }
