@@ -186,11 +186,12 @@ fun Objects(
                                     objectViewModel.onResourceSuccess(dto, types,rooms)
                                     LazyColumn(
                                         modifier = Modifier
-                                            .fillMaxSize()
+                                            .fillMaxSize(),
                                     ) {
                                         items(objs) { o ->
                                             ObjectCard(
                                                 modifier = Modifier
+                                                    .padding(vertical = 4.dp)
                                                     .clickable {
                                                         navController.navigate("${AppScreen.ObjectDetails.navLink}/${o.id}")
 
