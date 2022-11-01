@@ -162,10 +162,15 @@ fun dMYhm(date2:String):String{
     val simple =SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss.SSS+00:00")
     val date = simple.parse(date2)?.time!!
 
+    val z:TimeZone = Calendar.getInstance().timeZone
+
+
+
+
     return DateFormat.format("dd", date) as String+"."+
             DateFormat.format("MM", date.toLong()) as String+"."+
             DateFormat.format("yyyy", date.toLong()) as String+" "+
-            DateFormat.format("kk", date.toLong()) as String+":"+
+            DateFormat.format("kk", date.toLong()+z.getRawOffset()) as String+":"+
             DateFormat.format("mm", date.toLong()) as String
 
 }

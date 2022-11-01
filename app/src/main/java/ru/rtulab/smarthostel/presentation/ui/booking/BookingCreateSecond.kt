@@ -3,6 +3,7 @@ package ru.rtulab.smarthostel.presentation.ui.booking
 import android.icu.text.DateFormatSymbols
 import android.icu.text.SimpleDateFormat
 import android.text.format.DateFormat
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableState
@@ -74,6 +75,12 @@ Scaffold(
             val year = DateFormat.format("yyyy", date) as String // 2022
 
             val hh = DateFormat.format("hh", date) as String //
+
+            val z:TimeZone = Calendar.getInstance().timeZone
+            val zchislo = z.getRawOffset() / 1000 / 60 / 60
+            val tz = if(zchislo<10 && zchislo>-10) "0$zchislo" else "$zchislo"
+
+
 
             val day = 86400000
 
@@ -239,20 +246,15 @@ Scaffold(
                                 colorFill = White,
                                 onClick = {
                                     bookingViewModel.beginTime.value = DateFormat.format(
-                                        "yyyy-MM-dd'T'HH:mm:ss.000+03:00",
-                                        date.time - (date.time % (86400000)) /*- 3*3600000*/ + day * dayOfWeek.value + (leftTwoDig * 60 + leftTwoDigM) * 60000
+                                        "yyyy-MM-dd'T'HH:mm:ss.000+$tz:00",
+                                        date.time - (date.time % (86400000)) - 3*3600000 + day * dayOfWeek.value + (leftTwoDig * 60 + leftTwoDigM) * 60000
                                     ) as String
                                     bookingViewModel.endTime.value = DateFormat.format(
-                                        "yyyy-MM-dd'T'HH:mm:ss.000+03:00",
-                                        date.time - (date.time % (86400000)) /*- 3*3600000*/ + day * dayOfWeek.value + (rightTwoDig * 60 + rightTwoDigM) * 60000
+                                        "yyyy-MM-dd'T'HH:mm:ss.000+$tz:00",
+                                        date.time - (date.time % (86400000)) - 3*3600000 + day * dayOfWeek.value + (rightTwoDig * 60 + rightTwoDigM) * 60000
                                     ) as String
-                                    bookingViewModel.createBook() { good ->
-                                        if (good) {
-                                            /*runBlocking(Dispatchers.Main) {
-                                                navController.navigate("${AppScreen.Home.navLink}")
-                                            }*/
-                                        }
-                                    }
+                                    Log.d("TIMEZONE",bookingViewModel.beginTime.value)
+                                    bookingViewModel.createBook()
 
                                 }
                             )
