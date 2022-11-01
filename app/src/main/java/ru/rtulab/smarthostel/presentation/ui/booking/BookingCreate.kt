@@ -72,7 +72,7 @@ fun BookingCreate(
                             Text(text = msg)
                         },
                         onSuccess = { obj ->
-                            var (mSelectedObj, selObj) = remember { mutableStateOf(obj[0].name) }
+                            var (mSelectedObj, selObj) = remember { mutableStateOf(obj.filter { it.typeId==(ts.find{ t-> t.name == mSelectedType }!!.id)}[0].name) }
 
                             val typeObj =
                                 obj.filter { o -> o.typeId == (ts.find { it.name == mSelectedType }!!.id) }
