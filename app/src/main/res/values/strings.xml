@@ -56,6 +56,12 @@
     <string name="description">Описание</string>
     <string name="gotoBook">Перейти к бронированию</string>
     <string name="SayAboutCrash">Сообщить о поломке</string>
+    <string name="DescribeProblem">Опишите проблему</string>
+    <string name="problem">Проблема</string>
+    <string name="reports">Поломки</string>
+    <string name="report_new">Новая поломка</string>
+    <string name="DescribeYourProblem">Опишите возникшую проблему</string>
+    <string name="Send">Отправить</string>
 
 
 </resources>
