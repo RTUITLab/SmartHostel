@@ -30,6 +30,8 @@ sealed class AppTab(
     object Objects: AppTab("objects_tab", AppScreen.Objects.route, R.string.objects, R.drawable.objects)
     object Booking: AppTab("booking_tab", AppScreen.Booking.route, R.string.booking, R.drawable.booking)
     object Profile: AppTab("profile_tab", AppScreen.Profile.route, R.string.profile, R.drawable.profile)
+    object Reports: AppTab("reports_tab", AppScreen.Reports.route, R.string.reports, R.drawable.ic_launcher_foreground)
+
 
     fun saveState() = bundleOf(SCREEN_KEY to route)
 
@@ -38,6 +40,7 @@ sealed class AppTab(
         Objects -> AppScreen.Objects
         Booking -> AppScreen.Booking
         Profile -> AppScreen.Profile
+        else -> AppScreen.Home
     }
     companion object {
         const val SCREEN_KEY = "SCREEN_KEY"
@@ -56,7 +59,7 @@ sealed class AppTab(
         )
 
         private fun restoreState(bundle: Bundle) = when (bundle.getString(SCREEN_KEY, null)) {
-
+            Reports.route -> Reports
             Profile.route   -> Profile
             Home.route  -> Home
             Objects.route -> Objects
@@ -94,6 +97,8 @@ open class AppScreen(
     object BookingCreate: AppScreen(R.string.booking_new, "booking/new") // Has back button
     object BookingCreateSecond: AppScreen(R.string.booking_new, "booking/new/2") // Has back button
 
+    object Reports: AppScreen(R.string.reports, "reports")
+    object ReportCreate: AppScreen(R.string.report_new, "reports/new") // Has back button
 
 
     companion object {
@@ -106,6 +111,8 @@ open class AppScreen(
             BookingDetails(context.resources.getString(R.string.booking_details)),
             BookingCreate,
             BookingCreateSecond,
+            Reports,
+            ReportCreate
         )
     }
 }

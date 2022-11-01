@@ -25,6 +25,7 @@ import ru.rtulab.smarthostel.presentation.ui.common.topAppBar.AppBarViewModel
 import ru.rtulab.smarthostel.presentation.ui.home.Home
 import ru.rtulab.smarthostel.presentation.ui.objects.ObjectDetals
 import ru.rtulab.smarthostel.presentation.ui.objects.Objects
+import ru.rtulab.smarthostel.presentation.ui.report.ReportDescription
 import ru.rtulab.smarthostel.presentation.viewmodel.hiltViewModel
 
 @Composable
@@ -72,6 +73,9 @@ val allScreens = AppScreen.getAll(LocalContext.current)
             resources = resources
         )
         profileGraph(
+            resources = resources
+        )
+        reportGraph(
             resources = resources
         )
     }
@@ -161,6 +165,20 @@ private fun NavGraphBuilder.profileGraph(
     ) {
         composable(AppScreen.Profile.route){
             Profile()
+        }
+
+    }
+
+}
+private fun NavGraphBuilder.reportGraph(
+    resources:Resources
+){
+    navigation(
+        startDestination = AppTab.Reports.startDestination,
+        route = AppTab.Reports.route
+    ) {
+        composable(AppScreen.ReportCreate.route){
+            ReportDescription()
         }
 
     }
