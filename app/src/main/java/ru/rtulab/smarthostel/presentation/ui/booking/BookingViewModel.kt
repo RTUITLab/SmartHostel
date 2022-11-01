@@ -51,15 +51,12 @@ class BookingViewModel @Inject constructor(
     //for book
     val snackbarHostState = SnackbarHostState()
 
-    var now:Long? = null
     var cachedObjId = MutableStateFlow<Int>(-1)
-    var cachedWeekDay:Int = 0
     var beginTime = MutableStateFlow("")
-    var _beginTime = beginTime.asStateFlow()
 
     var endTime = MutableStateFlow("")
 
-    fun createBook(good:(Boolean)->Unit) = viewModelScope.launch(Dispatchers.IO){
+    fun createBook() = viewModelScope.launch(Dispatchers.IO){
         val bookingDto:RequestBookingCreate = RequestBookingCreate(
             objectId = cachedObjId.value,
             reason ="Ответочка от мобилочки",
@@ -68,8 +65,11 @@ class BookingViewModel @Inject constructor(
         )
         bookingRepo.createBook(bookingDto).handle(
             onSuccess = {
-                good(true)
-                showSnackbar("Успешно забронирован")
+                if(it.isSuccessful)
+                    showSnackbar("Успешно забронирован")
+            },
+            onError = {
+                showSnackbar("Что то пошло не так...")
             }
         )
     }

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import ru.rtulab.smarthostel.R
 import ru.rtulab.smarthostel.presentation.navigation.AppScreen
 import ru.rtulab.smarthostel.presentation.navigation.LocalNavController
+import ru.rtulab.smarthostel.presentation.ui.Profile.ProfileViewModel
 import ru.rtulab.smarthostel.presentation.ui.booking.BookingViewModel
 import ru.rtulab.smarthostel.presentation.ui.common.ButtonFill
 import ru.rtulab.smarthostel.presentation.ui.common.ButtonOutlined
@@ -26,6 +27,7 @@ import ru.rtulab.smarthostel.presentation.ui.common.H1
 import ru.rtulab.smarthostel.presentation.ui.common.LoadingError
 import ru.rtulab.smarthostel.presentation.ui.dateTime.LineOfTime
 import ru.rtulab.smarthostel.presentation.ui.dateTime.WeekDayItem
+import ru.rtulab.smarthostel.presentation.ui.report.ReportViewModel
 import ru.rtulab.smarthostel.presentation.viewmodel.singletonViewModel
 import ru.rtulab.smarthostel.ui.theme.Accent
 import ru.rtulab.smarthostel.ui.theme.White
@@ -34,7 +36,8 @@ import java.util.*
 
 @Composable
 fun ObjectDetals(
-    objectItemViewModel: ObjectItemViewModel = singletonViewModel(),
+    reportViewModel: ReportViewModel = singletonViewModel(),
+    profileViewModel: ProfileViewModel = singletonViewModel(),
     bookingViewModel: BookingViewModel = singletonViewModel(),
     objectViewModel: ObjectViewModel = singletonViewModel(),
     objectId:String
@@ -43,6 +46,8 @@ fun ObjectDetals(
     val objres = objectViewModel.objectsResourceFlow.collectAsState().value
     val objtypesres = objectViewModel.objectTypesResourceFlow.collectAsState().value
     val objroomsres = objectViewModel.objectRoomsResourceFlow.collectAsState().value
+
+    val meres = profileViewModel.profileResourceFlow.collectAsState().value
 
     val navController = LocalNavController.current
 
@@ -286,7 +291,18 @@ fun ObjectDetals(
                                         )
                                         ButtonOutlined(
                                             text = stringResource(R.string.SayAboutCrash),
-                                            colorBorder = Accent
+                                            colorBorder = Accent,
+                                            onClick = {
+                                                navController.navigate(AppScreen.ReportCreate.navLink)
+                                                reportViewModel.objectId.value = id.toInt()
+                                                meres.handle(
+                                                    onSuccess = { me ->
+                                                        reportViewModel.residentId.value = me.id
+
+                                                    }
+                                                )
+
+                                            }
                                         )
                                     }
 
