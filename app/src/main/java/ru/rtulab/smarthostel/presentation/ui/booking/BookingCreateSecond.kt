@@ -80,6 +80,8 @@ Scaffold(
             val zchislo = z.getRawOffset() / 1000 / 60 / 60
             val tz = if(zchislo<10 && zchislo>-10) "0$zchislo" else "$zchislo"
 
+            val isDay = if(date.hours>12) 0 else 1;
+
 
 
             val day = 86400000
@@ -247,11 +249,11 @@ Scaffold(
                                 onClick = {
                                     bookingViewModel.beginTime.value = DateFormat.format(
                                         "yyyy-MM-dd'T'HH:mm:ss.000+$tz:00",
-                                        date.time - (date.time % (86400000)) - 3*3600000 + day * dayOfWeek.value + (leftTwoDig * 60 + leftTwoDigM) * 60000
+                                        date.time - (date.time % (86400000)) - 3*3600000 + day * (dayOfWeek.value+isDay) + (leftTwoDig * 60 + leftTwoDigM) * 60000
                                     ) as String
                                     bookingViewModel.endTime.value = DateFormat.format(
                                         "yyyy-MM-dd'T'HH:mm:ss.000+$tz:00",
-                                        date.time - (date.time % (86400000)) - 3*3600000 + day * dayOfWeek.value + (rightTwoDig * 60 + rightTwoDigM) * 60000
+                                        date.time - (date.time % (86400000)) - 3*3600000 + day * (dayOfWeek.value+isDay) + (rightTwoDig * 60 + rightTwoDigM) * 60000
                                     ) as String
                                     Log.d("TIMEZONE",bookingViewModel.beginTime.value)
                                     bookingViewModel.createBook()
