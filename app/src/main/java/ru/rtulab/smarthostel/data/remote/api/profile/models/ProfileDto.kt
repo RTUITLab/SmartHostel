@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProfileDto(
-    val id:Integer,
+    val id:Int,
     val fio:String,
     val birthdate:String,
     val studentId:String,
-    val room:Integer,
-    val role: Integer
+    val room:Int,
+    val role: Int
 
 ){
     fun toProfile() =

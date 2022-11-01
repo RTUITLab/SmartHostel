@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import net.openid.appauth.AuthorizationService
+import net.openid.appauth.BuildConfig
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +15,6 @@ import retrofit2.Retrofit
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-import ru.rtulab.smarthostel.BuildConfig
 import ru.rtulab.smarthostel.common.ResponseHandler
 import ru.rtulab.smarthostel.common.persistence.AuthStateStorage
 import ru.rtulab.smarthostel.data.BasicAuthInterceptor
@@ -23,6 +22,7 @@ import ru.rtulab.smarthostel.data.remote.api.booking.BookingApi
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectApi
 import ru.rtulab.smarthostel.data.remote.api.objects.ObjectTypeApi
 import ru.rtulab.smarthostel.data.remote.api.profile.ProfileApi
+import ru.rtulab.smarthostel.data.remote.api.report.ReportApi
 import javax.inject.Singleton
 
 
@@ -102,4 +102,8 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideObjectTypeApi(retrofit: Retrofit): ObjectTypeApi = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideReportApi(retrofit: Retrofit): ReportApi = retrofit.create()
 }
