@@ -6,7 +6,7 @@ sealed class Resource<out T> {
     object Loading: Resource<Nothing>()
     object Empty: Resource<Nothing>()
 
-    inline fun handle(
+     inline fun handle(
         onSuccess: (data: T) -> Unit = {},
         onError: (msg: String) -> Unit = {},
         onLoading: () -> Unit = {},
@@ -35,7 +35,7 @@ class ResourceGroup(
      * @param other [Resource] to be added to this group
      * @return this group with added [Resource]
      */
-    operator fun plus(other: Resource<*>): ResourceGroup {
+    suspend operator fun plus(other: Resource<*>): ResourceGroup {
         group.add(other)
         return this
     }
@@ -49,7 +49,7 @@ class ResourceGroup(
      *        casting to your desired type.
      * @sample ru.rtuitlab.itlab.presentation.screens.reports.ReportsViewModel.fetchReports
      */
-    fun handle(
+     fun handle(
         onSuccess: (data: List<*>) -> Unit,
         onError: (msg: String) -> Unit
     ) {
